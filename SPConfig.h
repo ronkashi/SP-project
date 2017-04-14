@@ -193,10 +193,12 @@ char *trimWhitespace(char *str);
 
 void setConfigDefaults(SPConfig config);
 
-SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value);
+SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value, const char* filename, int line);
 
 bool containsSpace(char *str);
 
 int getNumber(char *str);
+
+void printMissingParameter(const char *filename, char *parameter, int lines);
 
 #endif /* SPCONFIG_H_ */

@@ -26,7 +26,7 @@ struct sp_config_t {
 SPConfig spConfigCreate(const char* filename, SP_CONFIG_MSG* msg) {
     FILE* fd;
     SPConfig config;
-    int i;
+    int line = 0;
     char lineBuffer[MAX_LENGTH];
     char *token1, *token2, *trimString;
 
@@ -52,17 +52,20 @@ SPConfig spConfigCreate(const char* filename, SP_CONFIG_MSG* msg) {
     setConfigDefaults(config);
 
     while(fgets(lineBuffer, MAX_LENGTH, fd) != NULL) {
+        line++;
         trimString = trimWhitespace(lineBuffer);
         if(*trimString != '#' && *trimString != 0) {
             token1 = strtok(trimString, "=");
             token2 = strtok(NULL, "=");
             if(token2 == NULL) {
                 *msg = SP_CONFIG_INVALID_LINE;
+                printf("File: %s\nLine: %d\nMessage: Invalid configuration line\n", filename, line);
                 free(config);
                 return NULL;
             }
-            *msg = updateConfig(config, trimWhitespace(token1), trimWhitespace(token2));
+            *msg = updateConfig(config, trimWhitespace(token1), trimWhitespace(token2), filename, line);
             if(*msg != SP_CONFIG_SUCCESS) {
+                if(*msg != SP_CONFIG_INVALID_LINE) printf("File: %s\nLine: %d\nMessage: Invalid value - constraint not met\n", filename, line);
                 free(config);
                 return NULL;
             }
@@ -70,21 +73,25 @@ SPConfig spConfigCreate(const char* filename, SP_CONFIG_MSG* msg) {
     }
     if(*(config->spImagesDirectory) == '\0') {
         *msg = SP_CONFIG_MISSING_DIR;
+        printMissingParameter(filename, "spImagesDirectory", line);
         free(config);
         return NULL;
     }
     if(*(config->spImagesPrefix )== '\0') {
         *msg = SP_CONFIG_MISSING_PREFIX;
+        printMissingParameter(filename, "spImagesPrefix", line);
         free(config);
         return NULL;
     }
     if(*(config->spImagesSuffix) == '\0') {
         *msg = SP_CONFIG_MISSING_SUFFIX;
+        printMissingParameter(filename, "spImagesSuffix", line);
         free(config);
         return NULL;
     }
     if(config->spNumOfImages == 0) {
         *msg = SP_CONFIG_MISSING_NUM_IMAGES;
+        printMissingParameter(filename, "spNumOfImages", line);
         free(config);
         return NULL;
     }
@@ -247,7 +254,7 @@ void setConfigDefaults(SPConfig config) {
     snprintf(config->spLoggerFilename, MAX_LENGTH, "stdout");
 }
 
-SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value) {
+SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value, const char* filename, int line) {
     if(strcmp(variableName, "spImagesDirectory") == 0) {
         if(containsSpace(value)) return SP_CONFIG_INVALID_STRING;
         snprintf(config->spImagesDirectory, MAX_LENGTH, "%s", value);
@@ -317,6 +324,7 @@ SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* valu
         if(containsSpace(value)) return SP_CONFIG_INVALID_STRING;
         snprintf(config->spLoggerFilename, MAX_LENGTH, "%s", value);
     } else {
+        printf("File: %s\nLine: %d\nMessage: Invalid configuration line\n", filename, line);
         return SP_CONFIG_INVALID_LINE;
     }
     return SP_CONFIG_SUCCESS;
@@ -344,6 +352,10 @@ int getNumber(char *str) {
     char *end;
     int num = strtol(str, &end, 10);
     return *end ? -1 : num;
+}
+
+void printMissingParameter(const char *filename, char *parameter, int lines) {
+    printf("File: %s\nLine: %d\nMessage: Parameter %s is not set\n", filename, lines, parameter);
 }
 
 int main() {
