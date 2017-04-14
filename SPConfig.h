@@ -20,8 +20,17 @@ typedef enum sp_config_msg_t {
 	SP_CONFIG_INVALID_STRING,
 	SP_CONFIG_INVALID_ARGUMENT,
 	SP_CONFIG_INDEX_OUT_OF_RANGE,
-	SP_CONFIG_SUCCESS
+	SP_CONFIG_SUCCESS,
+	SP_CONFIG_INVALID_LINE,
+	SP_CONFIG_INVALID_BOOLEAN,
+	SP_CONFIG_INVALID_ENUM
 } SP_CONFIG_MSG;
+
+typedef enum sp_split_method_t {
+	RANDOM,
+	MAX_SPREAD,
+	INCREMENTAL
+} CUT_METHOD;
 
 typedef struct sp_config_t* SPConfig;
 
@@ -169,5 +178,25 @@ SP_CONFIG_MSG spConfigGetPCAPath(char* pcaPath, const SPConfig config);
  * If config == NULL nothig is done.
  */
 void spConfigDestroy(SPConfig config);
+
+int spConfigGetNumOfSimilarImgs(const SPConfig config, SP_CONFIG_MSG* msg);
+
+int spConfigGetKNN(const SPConfig config, SP_CONFIG_MSG* msg);
+
+int spConfigGetLoggerLevel(const SPConfig config, SP_CONFIG_MSG* msg);
+
+SP_CONFIG_MSG spConfigGetLoggerFilename(char* loggerFilename, const SPConfig config);
+
+CUT_METHOD spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg);
+
+char *trimWhitespace(char *str);
+
+void setConfigDefaults(SPConfig config);
+
+SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value);
+
+bool containsSpace(char *str);
+
+int getNumber(char *str);
 
 #endif /* SPCONFIG_H_ */

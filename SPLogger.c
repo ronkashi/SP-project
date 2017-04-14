@@ -49,3 +49,89 @@ void spLoggerDestroy() {
 	free(logger);//free allocation
 	logger = NULL;
 }
+
+SP_LOGGER_MSG spLoggerPrintError(const char* msg, const char* file, const char* function, const int line) {
+	if (!logger) {
+		return SP_LOGGER_UNDEFINED;
+	}
+
+	if (!msg || !file || !function || line < 0) {
+		return SP_LOGGER_INVALID_ARGUMENT;
+	}
+
+	if(fprintf(logger->outputChannel, "---ERROR---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+		return SP_LOGGER_WRITE_FAIL;
+	}
+
+	return SP_LOGGER_SUCCESS;
+}
+
+SP_LOGGER_MSG spLoggerPrintWarning(const char* msg, const char* file, const char* function, const int line) {
+	if (!logger) {
+		return SP_LOGGER_UNDEFINED;
+	}
+
+	if (logger->level != SP_LOGGER_ERROR_LEVEL) {
+		if (!msg || !file || !function || line < 0) {
+			return SP_LOGGER_INVALID_ARGUMENT;
+		}
+
+		if(fprintf(logger->outputChannel, "---WARNING---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
+	}
+
+	return SP_LOGGER_SUCCESS;
+}
+
+SP_LOGGER_MSG spLoggerPrintInfo(const char* msg) {
+	if (!logger) {
+		return SP_LOGGER_UNDEFINED;
+	}
+
+	if (logger->level == SP_LOGGER_INFO_WARNING_ERROR_LEVEL || logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
+		if (!msg) {
+			return SP_LOGGER_INVALID_ARGUMENT;
+		}
+
+		if(fprintf(logger->outputChannel, "---INFO---\n- message: %s\n", msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
+	}
+
+	return SP_LOGGER_SUCCESS;
+}
+
+SP_LOGGER_MSG spLoggerPrintDebug(const char* msg, const char* file, const char* function, const int line) {
+	if (!logger) {
+		return SP_LOGGER_UNDEFINED;
+	}
+
+	if (logger->level == SP_LOGGER_DEBUG_INFO_WARNING_ERROR_LEVEL) {
+		if (!msg || !file || !function || line < 0) {
+			return SP_LOGGER_INVALID_ARGUMENT;
+		}
+
+		if(fprintf(logger->outputChannel, "---DEBUG---\n- file: %s\n- function: %s\n- line: %d\n- message: %s\n", file, function, line, msg) < 0) {
+			return SP_LOGGER_WRITE_FAIL;
+		}
+	}
+
+	return SP_LOGGER_SUCCESS;
+}
+
+SP_LOGGER_MSG spLoggerPrintMsg(const char* msg) {
+	if (!logger) {
+		return SP_LOGGER_UNDEFINED;
+	}
+
+	if (!msg) {
+		return SP_LOGGER_INVALID_ARGUMENT;
+	}
+
+	if(fprintf(logger->outputChannel, "%s\n", msg) < 0) {
+		return SP_LOGGER_WRITE_FAIL;
+	}
+
+	return SP_LOGGER_SUCCESS;
+}

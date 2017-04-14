@@ -37,7 +37,7 @@ static bool identicalFiles(const char* fname1, const char* fname2) {
 
 //Logger is not defined
 static bool basicLoggerTest() {
-	ASSERT_TRUE(spLoggerPrintError("A","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_UNDIFINED);
+	ASSERT_TRUE(spLoggerPrintError("A","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_UNDEFINED);
 	spLoggerDestroy();
 	return true;
 }
@@ -74,5 +74,6 @@ int main() {
 	RUN_TEST(basicLoggerTest);
 	RUN_TEST(basicLoggerErrorTest);
 	RUN_TEST(basicLoggerDebugTest);
+	printf("Completed!\n");
 	return 0;
 }
