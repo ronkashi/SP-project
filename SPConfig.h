@@ -199,6 +199,6 @@ bool containsSpace(char *str);
 
 int getNumber(char *str);
 
-void printMissingParameter(const char *filename, char *parameter, int lines);
+void printMissingParameter(const char *filename, const char *parameter, int lines);
 
 #endif /* SPCONFIG_H_ */
