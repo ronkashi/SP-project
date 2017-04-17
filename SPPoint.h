@@ -108,6 +108,7 @@ double spPointGetAxisCoor(SPPoint* point, int axis);
  */
 double spPointL2SquaredDistance(SPPoint* p, SPPoint* q);
 SPPoint* spPointAddDimention(SPPoint* p,double val);
-double* spPointSortByCoor(SPPoint** arr,int size,int coor);
+int* spPointSortByCoor(SPPoint** arr,int size,int coor);
 int cmpfunc (const void * a, const void * b);
+SPPoint* spPointDecreaseDimention(SPPoint* p);
 #endif /* SPPOINT_H_ */

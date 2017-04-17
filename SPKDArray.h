@@ -11,7 +11,7 @@ typedef struct sp_kdTreeNode_t KDTreeNode;
  * Initializes the kd-array with the data given by arr.
  * The complexity of this operation is d*n*log(n).
  */
-KDTreeNode Init(SPPoint** arr, int size);
+SPKDArray* Init(SPPoint** arr, int size);
 
 /*
  * Returns two kd-arrays (kdLeft, kdRight) such that the first

@@ -5,12 +5,12 @@
  *      Author: gavrielc
  */
 #include "SPPoint.h"
-#include "stdlib.h"
+#include <stdlib.h>
 #include "math.h"
-#include "assert.h"
+#include <assert.h>
 
 int SortCoor;
-struct sp_point_t{
+struct sp_point_t {
 	int index;
 	int dim;
 	double* data;
@@ -20,19 +20,19 @@ SPPoint* spPointCreate(double* data, int dim, int index) {
 	SPPoint* point;
 	double *point_array;
 	int i;
-	if(data==NULL || dim<=0 || index <0) {
+	if (data == NULL || dim <= 0 || index < 0) {
 		return NULL;
 	}
 	point = (SPPoint*) malloc(sizeof(*point));
-	if(point==NULL) {
+	if (point == NULL) {
 		return NULL;
 	}
-	point_array = (double*) malloc(dim*sizeof(double));
-	if(point_array==NULL) {
+	point_array = (double*) malloc(dim * sizeof(double));
+	if (point_array == NULL) {
 		free(point);
 		return NULL;
 	}
-	for(i=0; i<dim; i++) {
+	for (i = 0; i < dim; i++) {
 		point_array[i] = data[i];
 	}
 	point->index = index;
@@ -47,7 +47,7 @@ SPPoint* spPointCopy(SPPoint* source) {
 }
 
 void spPointDestroy(SPPoint* point) {
-	if(point != NULL) {
+	if (point != NULL) {
 		free(point->data);
 		free(point);
 	}
@@ -74,56 +74,85 @@ double spPointL2SquaredDistance(SPPoint* p, SPPoint* q) {
 	assert(p->dim == q->dim);
 	double dist = 0;
 	int i;
-	for(i=0; i<p->dim; i++) {
-		dist += (p->data[i]-q->data[i])*(p->data[i]-q->data[i]);
+	for (i = 0; i < p->dim; i++) {
+		dist += (p->data[i] - q->data[i]) * (p->data[i] - q->data[i]);
 	}
 	return dist;
 }
-SPPoint* spPointAddDimention(SPPoint* p,double val){
-	if (p == NULL){
+SPPoint* spPointAddDimention(SPPoint* p, double val) {
+	if (p == NULL) {
 		return NULL;
 	}
+
 	int dim;
 	int index;
 	double* data;
 	int i;
+
 	dim = spPointGetDimension(p);
-	double* data = (double*)calloc(dim + 1,sizeof(*data));
-	if (NULL == data){
-		printf("mallocation FAIL");
+	index = spPointGetIndex(p);
+	data = (double*) calloc(dim + 1, sizeof(*data));
+	if (NULL == data) {
+		spPointDestroy(p);
 		return NULL;
 	}
-	for (i=0; i<dim;i++){
-		data[i]= spPointGetAxisCoor(p,i);
+	for (i = 0; i < dim; i++) {
+		data[i] = spPointGetAxisCoor(p, i);
 	}
 	data[dim] = val;
-	index = spPointGetIndex(p);
-	dim++;
 	spPointDestroy(p);
-	return spPointCreate(data,dim,index);
+	SPPoint* RT_POINT =  spPointCreate(data, dim +1 , index);
+	free(data);
+	return RT_POINT;
 }
 
-double* spPointSortByCoor(SPPoint** arr,int size,int coor){
+SPPoint* spPointDecreaseDimention(SPPoint* p) {
+	if (p == NULL) {
+		return NULL;
+	}
 
-	double* indexes;
+	int dim;
+	int index;
+	double* data;
 	int i;
-	indexes = (double*)calloc(size,sizeof(*indexes));
-	if (NULL == indexes){
-		printf("mallocation FAIL");
+
+	dim = spPointGetDimension(p) - 1;
+	index = spPointGetIndex(p);
+
+	////
+	data = (double*) calloc(dim, sizeof(*data));
+	if (NULL == data) {
+		spPointDestroy(p);
+		return NULL;
+	}
+	for (i = 0; i < dim; i++) {
+		data[i] = spPointGetAxisCoor(p, i);
+	}
+	spPointDestroy(p);
+	//
+	SPPoint* RT_POINT =  spPointCreate(data, dim , index);
+	free(data);
+	return RT_POINT;
+}
+
+int* spPointSortByCoor(SPPoint** arr, int size, int coor) {
+
+	int* indexes;
+	int i;
+	indexes = (int*) calloc(size, sizeof(*indexes));
+	if (NULL == indexes) {
 		return NULL;
 	}
 	SortCoor = coor;
-	qsort(arr,size,sizeof(*arr),cmpfunc());
-	for(i=0;i<size;i++){
-	indexes[i]= spPointGetAxisCoor(arr[i],arr[i]->dim-1);
+	qsort(arr, size, sizeof(*arr), cmpfunc);
+	for (i = 0; i < size; i++) {
+		indexes[i] = (int)spPointGetAxisCoor(arr[i], arr[i]->dim - 1);
 	}
-
 	return indexes;
 }
 
-int cmpfunc (const void * a, const void * b)
-{
-	SPPoint* A = (SPPoint*)a;
-	SPPoint* B = (SPPoint*)b;
-	return spPointGetAxisCoor(A,SortCoor)-spPointGetAxisCoor(B,SortCoor);
+int cmpfunc(const void * a, const void * b) {
+	SPPoint* A = (SPPoint*) a;
+	SPPoint* B = (SPPoint*) b;
+	return spPointGetAxisCoor(A, SortCoor) - spPointGetAxisCoor(B, SortCoor);
 }
