@@ -106,34 +106,6 @@ SPPoint* spPointAddDimention(SPPoint* p, double val) {
 	return RT_POINT;
 }
 
-SPPoint* spPointDecreaseDimention(SPPoint* p) {
-	if (p == NULL) {
-		return NULL;
-	}
-
-	int dim;
-	int index;
-	double* data;
-	int i;
-
-	dim = spPointGetDimension(p) - 1;
-	index = spPointGetIndex(p);
-
-	////
-	data = (double*) calloc(dim, sizeof(*data));
-	if (NULL == data) {
-		spPointDestroy(p);
-		return NULL;
-	}
-	for (i = 0; i < dim; i++) {
-		data[i] = spPointGetAxisCoor(p, i);
-	}
-	spPointDestroy(p);
-	//
-	SPPoint* RT_POINT =  spPointCreate(data, dim , index);
-	free(data);
-	return RT_POINT;
-}
 
 int* spPointSortByCoor(SPPoint** arr, int size, int coor) {
 

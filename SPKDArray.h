@@ -1,11 +1,10 @@
 
 #include "SPPoint.h"
 #include <stdbool.h>
+#include <stdio.h>
 
 
 typedef struct sp_kdArray_t SPKDArray;
-typedef struct sp_kdTreeNode_t KDTreeNode;
-
 
 /*
  * Initializes the kd-array with the data given by arr.
@@ -19,4 +18,15 @@ SPKDArray* Init(SPPoint** arr, int size);
  * kdRight.
  * The complexity of this operation is d*n.
  */
-bool Split(SPKDArray kdArr, int coor,SPKDArray kdLeft, SPKDArray kdRight);
+bool Split(SPKDArray* kdArr, int coor,SPKDArray* kdLeft, SPKDArray* kdRight);
+
+
+void spKdArrayDestroy(SPKDArray* kd_array);
+
+/*
+ * getters
+ */
+int getKdArraySize(SPKDArray* arr);
+int getKdArrayDim(SPKDArray* arr);
+int** getKdArrayMat(SPKDArray* arr);
+SPPoint** getKdArrayCopyArr(SPKDArray* arr);
