@@ -6,13 +6,14 @@
  */
 #include "SPPoint.h"
 #include <stdlib.h>
-#include "math.h"
+#include <math.h>
 #include <assert.h>
+#include <stdio.h>
 
 int SortCoor;
 struct sp_point_t {
-	int index;
 	int dim;
+	int index;
 	double* data;
 };
 
@@ -65,7 +66,8 @@ int spPointGetIndex(SPPoint* point) {
 }
 
 double spPointGetAxisCoor(SPPoint* point, int axis) {
-	assert(point != NULL && axis<point->dim);
+	assert(point != NULL);
+	assert(axis < point->dim);
 	return point->data[axis];
 }
 
@@ -111,20 +113,21 @@ int* spPointSortByCoor(SPPoint** arr, int size, int coor) {
 
 	int* indexes;
 	int i;
-	indexes = (int*) calloc(size, sizeof(*indexes));
+	indexes = (int*) calloc(size, sizeof(indexes));
 	if (NULL == indexes) {
 		return NULL;
 	}
 	SortCoor = coor;
-	qsort(arr, size, sizeof(*arr), cmpfunc);
+	qsort(arr, size, sizeof(SPPoint*),cmpfunc);
 	for (i = 0; i < size; i++) {
-		indexes[i] = (int)spPointGetAxisCoor(arr[i], arr[i]->dim - 1);
+		indexes[i] = (int)floor(spPointGetAxisCoor(arr[i], arr[i]->dim - 1));
 	}
 	return indexes;
 }
 
 int cmpfunc(const void * a, const void * b) {
-	SPPoint* A = (SPPoint*) a;
-	SPPoint* B = (SPPoint*) b;
-	return spPointGetAxisCoor(A, SortCoor) - spPointGetAxisCoor(B, SortCoor);
+	if(0 < spPointGetAxisCoor(*(SPPoint**)a, SortCoor) - spPointGetAxisCoor(*(SPPoint**)b, SortCoor)){
+		return 1;
+	}
+	return -1;
 }

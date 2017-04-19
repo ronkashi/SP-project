@@ -77,6 +77,15 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	root->Val = spPointGetAxisCoor(
 			getKdArrayCopyArr(arr)[getKdArrayMat(arr)[root->Dim][round_up_med]],
 			root->Dim);
+	kdLeft = (SPKDArray*) calloc(1, sizeof(kdLeft));
+	if(NULL == kdLeft){
+		return -1;//TODO mem alloc fail
+	}
+	kdRight = (SPKDArray*) calloc(1, sizeof(kdRight));
+	if(NULL == kdRight){
+		free(kdLeft);
+		return -1;//TODO mem alloc fail
+	}
 	if (false == Split(arr, root->Dim, kdLeft, kdRight)) {
 		return -1;
 	}

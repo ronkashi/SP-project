@@ -14,7 +14,7 @@
 //
 //	printf("\n");
 //	for (int i = 0; i < spPointGetDimension(getKdArrayCopyArr(arr)[0]); i++) {
-//		for (int j = 0; getKdArraySize(arr); ++j) {
+//		for (int j = 0; j<getKdArraySize(arr); ++j) {
 //			printf("%d\t", getKdArrayMat(arr)[i][j]);
 //		}
 //		printf("\n");
@@ -36,13 +36,42 @@
 //	printKDArray(kdarr);
 //	SPKDArray* left = NULL;
 //	SPKDArray* right = NULL;
-//	Split(kdarr, 0,left,right);
+//	left = (SPKDArray*) calloc(1, sizeof(left));
+//	right = (SPKDArray*) calloc(1, sizeof(right));
+//	Split(kdarr, 0 ,left,right);
 //	printf("\n");
 //	printKDArray(left);
 //	printf("\n");
 //	printKDArray(right);
-//
 //	printf("hello\n");
 //	return 0;
 //}
 //
+//
+////int main(int argc, char **argv) {
+////	int i;
+////	int* indexes;
+////	SPPoint** p_arr;
+////	int index = 100;
+////	double data[POINT_NUM][DIM] = { { 1, 4, 0 }, { 3, 2, 1 } };
+////
+////	p_arr = malloc(sizeof(SPPoint*) * 2);
+////
+////	for (i = 0; i < POINT_NUM; i++)
+////		p_arr[i] = spPointCreate(data[i], DIM, index + i);
+////
+////	indexes = spPointSortByCoor(p_arr, POINT_NUM, 1);
+////
+////	for (i = 0; i < POINT_NUM; i++)
+////		printf("item no. %d is: %d\n", i, indexes[i]);
+////
+////	for (i = 0; i < POINT_NUM; ++i) {
+////		printf("point no. %d dim is: %d\n", i, spPointGetDimension(p_arr[i]));
+////		spPointDestroy(p_arr[i]);
+////	}
+////	free(p_arr);
+////	free(indexes);
+////
+////	return 0;
+////
+////}
