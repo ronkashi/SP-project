@@ -16,9 +16,12 @@ int main(int argc, char* argv[]) {
     SPConfig config;
     SP_CONFIG_MSG msg;
     SPPoint*** featuresDatabase;
+    SPPoint** flatDatabase;
+    SPKDArray* kdArray;
+    kdTreeNode* kdTree;
     int* nFeatures;
     double* data;
-    int numOfImgs, dimension, fd;
+    int numOfImgs, dimension, fd, allFeatures=0;
     char path[1024];
 
     if(argc == 1) {
@@ -88,7 +91,27 @@ int main(int argc, char* argv[]) {
         printf("Extracted from file");
     }
 
-    // TODO initialize data structures
+    // flattening point array so a kd tree can be created
+    for(int i=0; i<numOfImgs; i++) {
+        allFeatures += nFeatures[i];
+    }
+    flatDatabase = (SPPoint**) malloc(allFeatures * sizeof(SPPoint*));
+    int k = 0;
+    for(int i=0; i<numOfImgs; i++) {
+        for(int j=0; j<nFeatures[i]; j++) {
+            flatDatabase[k++] = featuresDatabase[i][j];
+        }
+    }
+    free(nFeatures);
+    free(featuresDatabase);
+
+    //initialize data structures
+
+    kdArray = Init(flatDatabase, allFeatures);
+    if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
+        //TODO free mem and exit if initializing tree fails
+    }
+    
 
     while(false) { //TODO implement bool getImageFromPath(char* path, ...)
 
