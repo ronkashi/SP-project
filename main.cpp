@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
             featuresDatabase[i] = (SPPoint**) malloc(nFeatures[i] * sizeof(SPPoint*));
                         
             for(int j = 0; j<nFeatures[i]; j++) {
-                read(fd, data, sizeof(*data));
+                read(fd, data, dimension * sizeof(double));
                 featuresDatabase[i][j] = spPointCreate(data, dimension, i);
             }
             close(fd);
@@ -103,6 +103,7 @@ int main(int argc, char* argv[]) {
         for(int j=0; j<nFeatures[i]; j++) {
             flatDatabase[k++] = featuresDatabase[i][j];
         }
+        free(featuresDatabase[i]);
     }
     free(nFeatures);
     free(featuresDatabase);
@@ -110,6 +111,12 @@ int main(int argc, char* argv[]) {
     //initialize data structures
 
     kdArray = Init(flatDatabase, allFeatures);
+    for(int i = 0; i<allFeatures; i++) {
+        spPointDestroy(flatDatabase[i]);
+    }
+    free(flatDatabase);
+    printf("Array created\n");
+
     if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
         //TODO free mem and exit if initializing tree fails
     }
@@ -132,7 +139,6 @@ int main(int argc, char* argv[]) {
 
     // TODO freeAllResourcesAndExit()
     spConfigDestroy(config);
-    free(flatDatabase);
     printf("Exiting...\n");
     return 0;
 }
