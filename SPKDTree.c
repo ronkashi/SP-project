@@ -53,6 +53,13 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (NULL == arr) {
 		return -1;
 	}
+
+	root = (kdTreeNode*) malloc(sizeof(*root));
+	if (NULL == root) {
+		//TODO allocation fail
+		return -1;
+	}
+
 	if (getKdArraySize(arr) == 1) {
 		root->Data = getKdArrayCopyArr(arr)[0];
 		root->Dim = -1;
@@ -61,11 +68,6 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 		root->Val = -1;
 	}
 
-	root = (kdTreeNode*) malloc(sizeof(*root));
-	if (NULL == root) {
-		//TODO allocation fail
-		return -1;
-	}
 	int round_up_med =
 			(getKdArraySize(arr) % 2 == 0) ?
 					(getKdArraySize(arr) / 2) : (getKdArraySize(arr) / 2 + 1);

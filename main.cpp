@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     SPPoint*** featuresDatabase;
     SPPoint** flatDatabase;
     SPKDArray* kdArray;
-    kdTreeNode* kdTree;
+    kdTreeNode* kdTree = NULL;
     int* nFeatures;
     double* data;
     int numOfImgs, dimension, fd, allFeatures=0;
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
             close(fd);
         }
         free(data);
-        printf("Extracted from file");
+        printf("Extracted from file\n");
     }
 
     // flattening point array so a kd tree can be created
@@ -113,7 +113,8 @@ int main(int argc, char* argv[]) {
     if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
         //TODO free mem and exit if initializing tree fails
     }
-
+    printf("Array size: %d\n", getKdArraySize(kdArray));
+    spKdArrayDestroy(kdArray);
 
     while(false) { //TODO implement bool getImageFromPath(char* path, ...)
 
@@ -130,9 +131,8 @@ int main(int argc, char* argv[]) {
     }
 
     // TODO freeAllResourcesAndExit()
-    printf("Exiting...");
     spConfigDestroy(config);
-    free(nFeatures);
-    free(featuresDatabase);
+    free(flatDatabase);
+    printf("Exiting...\n");
     return 0;
 }
