@@ -39,21 +39,43 @@ int main(int argc, char* argv[]) {
     if(msg != SP_CONFIG_SUCCESS) {
         printf("some other message"); //TODO
         return -1;
+    }
+
+    printf("config created\n");
+    if (spConfigIsExtractionMode(config, &msg)) {
+        //TODO Extract features from file
     } else {
-        printf("config created\n");
-        //extract features
+        // Extract features from images
+        numOfImgs = spConfigGetNumOfImages(config, &msg);
+        sp::ImageProc ip = sp::ImageProc(config);
+        nFeatures = (int*) malloc(numOfImgs * sizeof(*nFeatures));
+        featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
+        for(int i = 0; i < numOfImgs; i++) {
+            msg = spConfigGetImagePath(path, config, i);
+            featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
+        }
+
+        //TODO save to file
     }
-    printf("Hello world!\n");
-    numOfImgs = spConfigGetNumOfImages(config, &msg);
-    printf("Num of images: %d\n", numOfImgs);
-    sp::ImageProc ip = sp::ImageProc(config);
-    nFeatures = (int*) malloc(numOfImgs * sizeof(*nFeatures));
-    featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
-    for(int i = 0; i < numOfImgs; i++) {
-        msg = spConfigGetImagePath(path, config, i);
-        featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
+
+    // TODO initialize data structures
+
+    while(getImageFromPath(path)) { //TODO implement bool getImageFromPath(char* path, ...)
+
+        //TODO Extract features from image
+
+        //TODO get nearest neighbours for each feature and save hits to array
+
+        //TODO show results
+        if(spConfigMinimalGui(config, &msg)) {
+            //TODO showImagesWithGui()
+        } else {
+            //TODO print image results
+        }
     }
-    ip.showImage(path);
+
+    // TODO freeAllResourcesAndExit()
+    
     spConfigDestroy(config);
     free(nFeatures);
     free(featuresDatabase);
