@@ -26,11 +26,18 @@ typedef enum sp_config_msg_t {
 	SP_CONFIG_INVALID_ENUM
 } SP_CONFIG_MSG;
 
-typedef enum sp_split_method_t {
-	RANDOM,
-	MAX_SPREAD,
-	INCREMENTAL
-} CUT_METHOD;
+typedef enum splitting_criteria_t{
+	MAX_SPREAD, // Define the spread of the i_th dimension to be the difference
+				//between the maximum and minimum
+				//of the i_th coordinate of all points.
+				//In the example given in the previous section the spread of
+				//the x-coordinate is 123 - 1 = 122 and for the y-coordinate is 70-2 =68.
+				//Split the kd-array according the dimension with the highest spread
+				//(if there are several candidates choose the lowest dimension)
+	RANDOM, // choose a random dimension
+	INCREMENTAL //- if the splitting dimension of the upper level was i,
+				//then the splitting dimension at this level is (i+1)%d
+} SPLIT_CRITERIA;
 
 typedef struct sp_config_t* SPConfig;
 
@@ -187,7 +194,7 @@ int spConfigGetLoggerLevel(const SPConfig config, SP_CONFIG_MSG* msg);
 
 SP_CONFIG_MSG spConfigGetLoggerFilename(char* loggerFilename, const SPConfig config);
 
-CUT_METHOD spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg);
+SPLIT_CRITERIA spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg);
 
 SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, const SPConfig config, int index);
 

@@ -28,7 +28,7 @@ SPImageProc.o: SPImageProc.cpp SPImageProc.h SPConfig.h SPPoint.h SPLogger.h
 #use "gcc -MM SPPoint.c" to see the dependencies
 SPPoint.o: SPPoint.c SPPoint.h 
 	$(CC) $(C_COMP_FLAG) -c $*.c
-SPKDTree.o: SPKDTree.c SPKDTree.h SPKDArray.h SPPoint.h
+SPKDTree.o: SPKDTree.c SPKDTree.h SPKDArray.h SPPoint.h SPConfig.h
 	$(CC) $(C_COMP_FLAG) -c $*.c
 SPKDArray.o: SPKDArray.c SPKDArray.h SPPoint.h 
 	$(CC) $(C_COMP_FLAG) -c $*.c

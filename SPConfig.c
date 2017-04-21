@@ -16,7 +16,7 @@ struct sp_config_t {
     int spNumOfFeatures;
     bool spExtractionMode;
     int spNumOfSimilarImages;
-    CUT_METHOD spKDTreeSplitMethod;
+    SPLIT_CRITERIA spKDTreeSplitMethod;
     int spKNN;
     bool spMinimalGUI;
     int spLoggerLevel;
@@ -235,7 +235,7 @@ SP_CONFIG_MSG spConfigGetLoggerFilename(char* loggerFilename, const SPConfig con
     return SP_CONFIG_SUCCESS;
 }
 
-CUT_METHOD spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg) {
+SPLIT_CRITERIA spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg) {
     if(msg == NULL) {
         printf("Invalid argument");
         return RANDOM;
