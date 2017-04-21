@@ -248,6 +248,17 @@ CUT_METHOD spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* ms
     return config->spKDTreeSplitMethod;
 }
 
+SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, const SPConfig config, int index) {
+    if(imagePath == NULL || config == NULL) {
+        return SP_CONFIG_INVALID_ARGUMENT;
+    }
+    if(index >= config->spNumOfImages) {
+        return SP_CONFIG_INDEX_OUT_OF_RANGE;
+    }
+    snprintf(imagePath, MAX_LENGTH, "%s%s%d%s", config->spImagesDirectory, config->spImagesPrefix, index, ".feats");
+    return SP_CONFIG_SUCCESS;
+}
+
 void setConfigDefaults(SPConfig config) {
     *config = (struct sp_config_t) {.spPCADimension = 20, .spNumOfFeatures = 100, true, 1, MAX_SPREAD, 1, false, 3};
     snprintf(config->spPCAFilename, MAX_LENGTH, "pca.yml");

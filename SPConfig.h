@@ -189,6 +189,8 @@ SP_CONFIG_MSG spConfigGetLoggerFilename(char* loggerFilename, const SPConfig con
 
 CUT_METHOD spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg);
 
+SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, const SPConfig config, int index);
+
 char *trimWhitespace(char *str);
 
 void setConfigDefaults(SPConfig config);
