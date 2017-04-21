@@ -4,13 +4,18 @@
 extern "C"{
     #include "SPConfig.h"
     #include "SPLogger.h"
+    #include "SPPoint.h"
 }
 
-//#include "SPImageProc.h"
+#include "SPImageProc.h"
 
 int main(int argc, char* argv[]) {
     SPConfig config;
     SP_CONFIG_MSG msg;
+    SPPoint*** featuresDatabase;
+    int* nFeatures; 
+    int numOfImgs;
+    char path[1024];
 
     if(argc == 1) {
 
@@ -39,5 +44,18 @@ int main(int argc, char* argv[]) {
         //extract features
     }
     printf("Hello world!\n");
+    numOfImgs = spConfigGetNumOfImages(config, &msg);
+    printf("Num of images: %d\n", numOfImgs);
+    sp::ImageProc ip = sp::ImageProc(config);
+    nFeatures = (int*) malloc(numOfImgs * sizeof(*nFeatures));
+    featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
+    for(int i = 0; i < numOfImgs; i++) {
+        msg = spConfigGetImagePath(path, config, i);
+        featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
+    }
+    ip.showImage(path);
+    spConfigDestroy(config);
+    free(nFeatures);
+    free(featuresDatabase);
     return 0;
 }
