@@ -1,4 +1,4 @@
-#include "spKdTreeNode.h"
+#include "SPKDTree.h"
 
 #define spKNN 3 //TODO ask from config
 struct kdTreeNode_t {

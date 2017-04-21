@@ -5,6 +5,8 @@ extern "C"{
     #include "SPConfig.h"
     #include "SPLogger.h"
     #include "SPPoint.h"
+    #include "SPKDArray.h"
+    #include "SPKDTree.h"
 }
 
 #include "SPImageProc.h"
@@ -111,7 +113,7 @@ int main(int argc, char* argv[]) {
     if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
         //TODO free mem and exit if initializing tree fails
     }
-    
+
 
     while(false) { //TODO implement bool getImageFromPath(char* path, ...)
 
