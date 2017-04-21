@@ -111,4 +111,5 @@ SPPoint* spPointAddDimention(SPPoint* p,double val);
 int* spPointSortByCoor(SPPoint** arr,int size,int coor);
 int cmpfunc (const void * a, const void * b);
 SPPoint* spPointDecreaseDimention(SPPoint* p);
+double* spPointGetData(SPPoint* p);
 #endif /* SPPOINT_H_ */
