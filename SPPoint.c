@@ -131,3 +131,8 @@ int cmpfunc(const void * a, const void * b) {
 	}
 	return -1;
 }
+
+double* spPointGetData(SPPoint* p) {
+	return p->data;
+}
+
