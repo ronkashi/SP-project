@@ -8,13 +8,17 @@ extern "C"{
 }
 
 #include "SPImageProc.h"
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 int main(int argc, char* argv[]) {
     SPConfig config;
     SP_CONFIG_MSG msg;
     SPPoint*** featuresDatabase;
-    int* nFeatures; 
-    int numOfImgs, totalFeatures = 0, dimension, fd;
+    int* nFeatures;
+    double* data;
+    int numOfImgs, dimension, fd;
     char path[1024];
 
     if(argc == 1) {
@@ -44,12 +48,6 @@ int main(int argc, char* argv[]) {
     printf("config created\n");
 
     dimension = spConfigGetPCADim(config, &msg);
-    typedef struct { 
-        int dim;
-        int index;
-        double data[dimension];
-    } StaticPoint;
-
     numOfImgs = spConfigGetNumOfImages(config, &msg);
     nFeatures = (int*) malloc(numOfImgs * sizeof(*nFeatures));
     featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
@@ -62,38 +60,37 @@ int main(int argc, char* argv[]) {
             featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
 
             //save to file
-            StaticPoint statPointArr[nFeatures[i]];
-            for(int j = 0; j<nFeatures[i]; j++) {
-                statPointArr[j].dim = dimension;
-                statPointArr[j].index = i;
-                memcpy(statPointArr[j].data, featuresDatabase[i][j]->data, dimension * sizeof(double));
-            }
             msg = spConfigGetFeatsPath(path, config, i);
             fd = open(path, O_RDWR | O_CREAT, 0755);
             write(fd, nFeatures+i, sizeof(int));
-            write(fd, &statPointArr, sizeof(statPointArr));
+            for(int j = 0; j<nFeatures[i]; j++) {
+                write(fd, spPointGetData(featuresDatabase[i][j]), dimension * sizeof(double));
+            }
             close(fd);
         }
     } else {
 
         // Extract features from file
+        data = (double*) malloc(dimension * sizeof(double));
         for(int i = 0; i<numOfImgs; i++) {
             msg = spConfigGetFeatsPath(path, config, i);
             fd = open(path, O_RDWR);
             read(fd, nFeatures+i, sizeof(int));
-            StaticPoint statPointArr[nFeatures[i]];
-            read(fd, &statPointArr, sizeof(statPointArr));
-            close(fd);
             featuresDatabase[i] = (SPPoint**) malloc(nFeatures[i] * sizeof(SPPoint*));
-            for(int j = 0; j<dimension; j++) {
-                featuresDatabase[i][j] = spPointCreate(&statPointArr[j].data, dimension, i);
+                        
+            for(int j = 0; j<nFeatures[i]; j++) {
+                read(fd, data, sizeof(*data));
+                featuresDatabase[i][j] = spPointCreate(data, dimension, i);
             }
+            close(fd);
         }
+        free(data);
+        printf("Extracted from file");
     }
 
     // TODO initialize data structures
 
-    while(getImageFromPath(path)) { //TODO implement bool getImageFromPath(char* path, ...)
+    while(false) { //TODO implement bool getImageFromPath(char* path, ...)
 
         //TODO Extract features from image
 
@@ -108,7 +105,7 @@ int main(int argc, char* argv[]) {
     }
 
     // TODO freeAllResourcesAndExit()
-    
+    printf("Exiting...");
     spConfigDestroy(config);
     free(nFeatures);
     free(featuresDatabase);
