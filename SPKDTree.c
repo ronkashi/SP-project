@@ -66,6 +66,7 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 		root->Left = NULL;
 		root->Right = NULL;
 		root->Val = -1;
+		return 0;
 	}
 
 	int round_up_med =
@@ -76,9 +77,11 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	SPKDArray* kdRight = NULL;
 	root->Data = NULL;
 	root->Dim = getCoorToSplitBy(arr, op, level);
+	printf("Root dimension: %d\n", root->Dim);
 	root->Val = spPointGetAxisCoor(
 			getKdArrayCopyArr(arr)[getKdArrayMat(arr)[root->Dim][round_up_med]],
 			root->Dim);
+	printf("Root value: %d\n", root->Val);
 	kdLeft = (SPKDArray*) calloc(1, sizeof(kdLeft));
 	if(NULL == kdLeft){
 		return -1;//TODO mem alloc fail
