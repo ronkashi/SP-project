@@ -53,7 +53,6 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (NULL == arr) {
 		return -1;
 	}
-	printf("Level: %d\t", level);
 	root = (kdTreeNode*) malloc(sizeof(*root));
 	if (NULL == root) {
 		//TODO allocation fail
