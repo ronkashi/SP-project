@@ -53,11 +53,6 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (NULL == arr) {
 		return -1;
 	}
-	root = (kdTreeNode*) malloc(sizeof(*root));
-	if (NULL == root) {
-		//TODO allocation fail
-		return -1;
-	}
 
 	if (getKdArraySize(arr) == 1) {
 		root->Data = getKdArrayCopyArr(arr)[0];
@@ -92,6 +87,19 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 		return -1;
 	}
 	level++;
+	root->Left = (kdTreeNode*) malloc(sizeof(kdTreeNode));
+	if (NULL == root->Left) {
+		//TODO allocation fail
+		printf("tree malloc fail\n");
+		return -1;
+	}
+	root->Right = (kdTreeNode*) malloc(sizeof(kdTreeNode));
+	if (NULL == root->Right) {
+		//TODO allocation fail
+		free(root->Left);
+		printf("tree malloc fail\n");
+		return -1;
+	}
 	spKdTreeInit(kdLeft, root->Left, op, level);
 	spKdTreeInit(kdRight, root->Right, op, level);
 	return 0;

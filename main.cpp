@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     BPQueueElement* queueElement;
     int *nFeatures, *featureHits;
     double* data;
-    int numOfImgs, dimension, fd, allFeatures=0, numQueryFeatures = 0, kClosest;
+    int numOfImgs, dimension, fd, allFeatures=0, numQueryFeatures = 1, kClosest;
     char path[1024];
 
     if(argc == 1) {
@@ -121,6 +121,7 @@ int main(int argc, char* argv[]) {
     }
     free(flatDatabase);
     printf("Array created\n");
+    kdTree = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 
     if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
         //TODO free mem and exit if initializing tree fails
