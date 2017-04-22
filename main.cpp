@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
     }
     free(flatDatabase);
     printf("Array created\n");
-    kdTree = (kdTreeNode*) malloc(sizeof(kdTreeNode));
+    kdTree = (kdTreeNode*) malloc(sizeof(*kdTree));
 
     if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
         //TODO free mem and exit if initializing tree fails

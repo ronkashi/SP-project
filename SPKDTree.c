@@ -1,13 +1,6 @@
 #include "SPKDTree.h"
 
 #define spKNN 3 //TODO ask from config
-struct kdTreeNode_t {
-	int Dim; //The splitting dimension
-	double Val; //The median value of the splitting dimension
-	kdTreeNode* Left; //Left = Pointer to the left subtree
-	kdTreeNode* Right; //Pointer to the right subtree
-	SPPoint* Data; //Pointer to a point (only if the current node is a leaf) otherwise this field value is NULL
-};
 
 int getCoorToSplitBy(SPKDArray* arr, SPLIT_CRITERIA op, int level) {
 	switch (op) {
