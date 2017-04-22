@@ -14,8 +14,8 @@
 typedef struct kdTreeNode_t {
 	int Dim; //The splitting dimension
 	double Val; //The median value of the splitting dimension
-	kdTreeNode* Left; //Left = Pointer to the left subtree
-	kdTreeNode* Right; //Pointer to the right subtree
+	struct kdTreeNode_t* Left; //Left = Pointer to the left subtree
+	struct kdTreeNode_t* Right; //Pointer to the right subtree
 	SPPoint* Data; //Pointer to a point (only if the current node is a leaf) otherwise this field value is NULL
 } kdTreeNode;
 

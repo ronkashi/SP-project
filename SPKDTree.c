@@ -137,7 +137,6 @@ int kNearestNeighbors(kdTreeNode* curr, SPBPQueue* bpq, SPPoint* P) {
 	if (NULL == curr || NULL == P) {
 		return -1;
 	}
-	bpq = spBPQueueCreate(spKNN);
 	kNearestNeighborsRecFunc(curr, bpq, P);
 
 	return 0;

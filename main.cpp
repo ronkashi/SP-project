@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     SPPoint** queryFeatures;
     SPKDArray* kdArray;
     kdTreeNode* kdTree = NULL;
-    SPBPQueue* queue = NULL;
+    SPBPQueue* queue = NULL, *imgQueue = NULL;
     BPQueueElement* queueElement;
     int *nFeatures, *featureHits;
     double* data;
@@ -130,6 +130,7 @@ int main(int argc, char* argv[]) {
     spKdArrayDestroy(kdArray);
 
     queueElement = (BPQueueElement*) malloc(sizeof(BPQueueElement));
+    queue = spBPQueueCreate(spConfigGetKNN(config, &msg));
 
     while(spEnterQueryImg(path)) { //TODO implement bool getImageFromPath(char* path, ...)
         queryFeatures = ip.getImageFeatures(path, numOfImgs, &numQueryFeatures);
@@ -141,35 +142,34 @@ int main(int argc, char* argv[]) {
                 featureHits[queueElement->index]++;
                 spBPQueueDequeue(queue);
             }
-            spBPQueueDestroy(queue);
         }
         kClosest = spConfigGetNumOfSimilarImgs(config, &msg);
-        queue = spBPQueueCreate(kClosest);
+        imgQueue = spBPQueueCreate(kClosest);
         if(NULL == queue){
             // TODO
         }
         for (int i = 0; i < numOfImgs; i++) {
-            spBPQueueEnqueue(queue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
+            spBPQueueEnqueue(imgQueue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
         }
         free(featureHits);
 
         if(spConfigMinimalGui(config, &msg)) {
             for (int j = 0; j < kClosest; j++) {
-                spBPQueuePeek(queue, queueElement);
+                spBPQueuePeek(imgQueue, queueElement);
                 spConfigGetImagePath(path, config, queueElement->index);
                 ip.showImage(path);
-                spBPQueueDequeue(queue);
+                spBPQueueDequeue(imgQueue);
             }
         } else {
             printf("Best candidates for - %s - are:\n", path);
             for (int j = 0; j < kClosest; j++) {
-                spBPQueuePeek(queue, queueElement);
+                spBPQueuePeek(imgQueue, queueElement);
                 spConfigGetImagePath(path, config, queueElement->index);
                 printf("%s\n", path);
-                spBPQueueDequeue(queue);
+                spBPQueueDequeue(imgQueue);
             }
         }
-        spBPQueueDestroy(queue);
+        spBPQueueDestroy(imgQueue);
         for(int i = 0; i<numQueryFeatures; i++) {
             spPointDestroy(queryFeatures[i]);
         }
@@ -178,6 +178,7 @@ int main(int argc, char* argv[]) {
 
     // TODO freeAllResourcesAndExit()
     // TODO kdTreeDestroy();
+    spBPQueueDestroy(queue);
     free(queueElement);
     spConfigDestroy(config);
     printf("Exiting...\n");
