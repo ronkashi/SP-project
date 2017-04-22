@@ -10,6 +10,7 @@ extern "C"{
 }
 
 #include "SPImageProc.h"
+#include "main_aux.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -123,7 +124,7 @@ int main(int argc, char* argv[]) {
     printf("Array size: %d\n", getKdArraySize(kdArray));
     spKdArrayDestroy(kdArray);
 
-    while(false) { //TODO implement bool getImageFromPath(char* path, ...)
+    while(spEnterQueryImage(path)) { //TODO implement bool getImageFromPath(char* path, ...)
 
         //TODO Extract features from image
 
@@ -138,6 +139,7 @@ int main(int argc, char* argv[]) {
     }
 
     // TODO freeAllResourcesAndExit()
+    // TODO kdTreeDestroy();
     spConfigDestroy(config);
     printf("Exiting...\n");
     return 0;
