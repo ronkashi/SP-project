@@ -19,12 +19,13 @@ int main(int argc, char* argv[]) {
     SPConfig config;
     SP_CONFIG_MSG msg;
     SPPoint*** featuresDatabase;
-    SPPoint** flatDatabase, queryFeatures;
+    SPPoint** flatDatabase;
+    SPPoint** queryFeatures;
     SPKDArray* kdArray;
     kdTreeNode* kdTree = NULL;
     SPBPQueue* queue = NULL;
     BPQueueElement* queueElement;
-    int* nFeatures, featureHits;
+    int *nFeatures, *featureHits;
     double* data;
     int numOfImgs, dimension, fd, allFeatures=0, numQueryFeatures = 0, kClosest;
     char path[1024];
@@ -147,7 +148,7 @@ int main(int argc, char* argv[]) {
             // TODO
         }
         for (int i = 0; i < numOfImgs; i++) {
-            spBPQueueEnqueue(queue, i, (double) ((kClosest * numQeuryFeatures) - featureHits[i]));
+            spBPQueueEnqueue(queue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
         }
         free(featureHits);
 
@@ -156,7 +157,7 @@ int main(int argc, char* argv[]) {
                 spBPQueuePeek(queue, queueElement);
                 spConfigGetImagePath(path, config, queueElement->index);
                 ip.showImage(path);
-                spBPQueueDequeue(localQueue);
+                spBPQueueDequeue(queue);
             }
         } else {
             printf("Best candidates for - %s - are:\n", path);
@@ -164,7 +165,7 @@ int main(int argc, char* argv[]) {
                 spBPQueuePeek(queue, queueElement);
                 spConfigGetImagePath(path, config, queueElement->index);
                 printf("%s\n", path);
-                spBPQueueDequeue(localQueue);
+                spBPQueueDequeue(queue);
             }
         }
         spBPQueueDestroy(queue);
