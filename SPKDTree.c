@@ -107,8 +107,12 @@ bool isLeaf(kdTreeNode* node) {
 	return false;
 }
 int kNearestNeighborsRecFunc(kdTreeNode* curr, SPBPQueue* bpq, SPPoint* P) {
+	if(curr == NULL) {
+		return 0;
+	}
 	if (isLeaf(curr)) {
-		if (spBPQueueMaxValue(bpq) > spPointL2SquaredDistance(curr->Data, P)) {
+		if ((!spBPQueueIsFull(bpq))
+				|| (spBPQueueMaxValue(bpq) > spPointL2SquaredDistance(curr->Data, P))) {
 			spBPQueueEnqueue(bpq, spPointGetIndex(curr->Data),
 					spPointL2SquaredDistance(curr->Data, P));
 			return 0;
