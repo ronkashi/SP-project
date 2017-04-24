@@ -199,3 +199,85 @@ bool spEnterQueryImg(char* queryPath) {
 	}
 	return true;
 }
+
+void searchByImage(SPConfig config, kdTreeNode* kdTree) {
+    char path[MAX_LENGTH;
+    BPQueueElement* queueElement;
+    SPBPQueue *queue, *imgQueue;
+    int numOfImgs, kClosest, *featureHits, numQueryFeatures = 0;
+    SP_CONFIG_MSG msg;
+    SPPoint** queryFeatures;
+
+    queueElement = (BPQueueElement*) malloc(sizeof(BPQueueElement));
+    if(!queueElement) {
+        spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        return;
+    }
+    queue = spBPQueueCreate(spConfigGetKNN(config, &msg));
+    if(!queue) {
+        spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        free(queueElement);
+        return;
+    }
+    imgQueue = spBPQueueCreate(kClosest);
+    if(!imgQueue) {
+        spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        free(queueElement);
+        spBPQueueDestroy(queue);
+        return;
+    }
+    numOfImgs = spConfigGetNumOfImages(config, &msg);
+    kClosest = spConfigGetNumOfSimilarImgs(config, &msg);
+    
+
+    while(spEnterQueryImg(path)) {
+        queryFeatures = ip.getImageFeatures(path, numOfImgs, &numQueryFeatures);
+        if(!queryFeatures) break;
+        featureHits = (int*) calloc(numOfImgs, sizeof(int));
+        if(!featureHits) {
+            spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+            break;
+        }
+        for(int i = 0; i<numQueryFeatures; i++) {
+            kNearestNeighbors(kdTree, queue, queryFeatures[i]);
+            for(int j=0; j<spBPQueueSize(queue); j++) {
+                spBPQueuePeek(queue, queueElement);
+                featureHits[queueElement->index]++;
+                spBPQueueDequeue(queue);
+            }
+        }
+
+        for (int i = 0; i < numOfImgs; i++) {
+            spBPQueueEnqueue(imgQueue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
+        }
+        free(featureHits);
+
+        if(spConfigMinimalGui(config, &msg)) {
+            for (int j = 0; j < kClosest; j++) {
+                spBPQueuePeek(imgQueue, queueElement);
+                spConfigGetImagePath(path, config, queueElement->index);
+                ip.showImage(path);
+                spBPQueueDequeue(imgQueue);
+            }
+        } else {
+            printf("Best candidates for - %s - are:\n", path);
+            for (int j = 0; j < kClosest; j++) {
+                spBPQueuePeek(imgQueue, queueElement);
+                spConfigGetImagePath(path, config, queueElement->index);
+                printf("%s\n", path);
+                spBPQueueDequeue(imgQueue);
+            }
+        }
+        
+        for(int i = 0; i<numQueryFeatures; i++) {
+            spPointDestroy(queryFeatures[i]);
+        }
+        free(queryFeatures);
+    }
+
+    // TODO kdTreeDestroy();
+    spBPQueueDestroy(imgQueue);
+
+    spBPQueueDestroy(queue);
+    free(queueElement);
+}

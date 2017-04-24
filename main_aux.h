@@ -25,7 +25,8 @@ SPPoint** processFeatures(SPConfig config, int* allFeatures, sp::ImageProc ip);
 
 kdTreeNode* initDataStructs(SPPoint** features, int numFeatures, SPConfig config);
 
-
 bool spEnterQueryImg(char* queryPath);
+
+void searchByImage(SPConfig config, kdTreeNode* kdTree);
 
 #endif
