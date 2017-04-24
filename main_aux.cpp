@@ -203,7 +203,7 @@ bool spEnterQueryImg(char* queryPath) {
 void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
     char path[MAX_LENGTH];
     BPQueueElement* queueElement;
-    SPBPQueue *queue, *imgQueue;
+    SPBPQueue *featuresQueue, *imgQueue;
     int numOfImgs, kClosest, *featureHits, numQueryFeatures = 0;
     SP_CONFIG_MSG msg;
     SPPoint** queryFeatures;
@@ -213,8 +213,8 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
         spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         return;
     }
-    queue = spBPQueueCreate(spConfigGetKNN(config, &msg));
-    if(!queue) {
+    featuresQueue = spBPQueueCreate(spConfigGetKNN(config, &msg));
+    if(!featuresQueue) {
         spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         free(queueElement);
         return;
@@ -224,7 +224,7 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
     if(!imgQueue) {
         spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         free(queueElement);
-        spBPQueueDestroy(queue);
+        spBPQueueDestroy(featuresQueue);
         return;
     }
     numOfImgs = spConfigGetNumOfImages(config, &msg);
@@ -238,11 +238,11 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
             break;
         }
         for(int i = 0; i<numQueryFeatures; i++) {
-            kNearestNeighbors(kdTree, queue, queryFeatures[i]);
-            for(int j=0; j<spBPQueueSize(queue); j++) {
-                spBPQueuePeek(queue, queueElement);
+            kNearestNeighbors(kdTree, featuresQueue, queryFeatures[i]);
+            for(int j=0; j<spBPQueueSize(featuresQueue); j++) {
+                spBPQueuePeek(featuresQueue, queueElement);
                 featureHits[queueElement->index]++;
-                spBPQueueDequeue(queue);
+                spBPQueueDequeue(featuresQueue);
             }
         }
 
@@ -276,6 +276,6 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
     }
 
     spBPQueueDestroy(imgQueue);
-    spBPQueueDestroy(queue);
+    spBPQueueDestroy(featuresQueue);
     free(queueElement);
 }
