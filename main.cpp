@@ -1,18 +1,7 @@
-#include <cstdio>
-#include <cstring>
 
-extern "C"{
-    #include "SPConfig.h"
-    #include "SPLogger.h"
-    #include "SPPoint.h"
-    #include "SPKDArray.h"
-    #include "SPKDTree.h"
-}
 
 #include "main_aux.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
+
 
 #define ALLOC_ERROR_MSG "Allocation error"
 

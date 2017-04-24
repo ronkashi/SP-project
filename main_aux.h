@@ -3,10 +3,18 @@
 
 
 extern "C" {
-    #include "SPPoint.h"
     #include "SPConfig.h"
+    #include "SPLogger.h"
+    #include "SPPoint.h"
+    #include "SPKDArray.h"
+    #include "SPKDTree.h"
 }
 
+#include <cstdio>
+#include <cstring>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include "SPImageProc.h"
 
 SPConfig createConfig(int argc, char* argv[]);

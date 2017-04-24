@@ -1,8 +1,5 @@
 #include "main_aux.h"
 
-#include <cstdio>
-#include <cstring>
-
 #define DEFAULT_CONFIG "spcbir.config"
 #define DEFAULT_CONFIG_ERROR "The default configuration file spcbir.config couldn't be open\n"
 #define CONFIG_ERROR "The configuration file %s couldn't be open\n"
@@ -35,7 +32,7 @@ SPConfig createConfig(int argc, char* argv[]) {
 }
 
 bool initializeLogger(SPConfig config) {
-    char* path[MAX_LENGTH];
+    char path[MAX_LENGTH];
     SP_LOGGER_MSG msg;
     SP_CONFIG_MSG configMsg;
     int level = spConfigGetLoggerLevel(config, &configMsg);
