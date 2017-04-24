@@ -10,7 +10,6 @@ int main(int argc, char* argv[]) {
     SP_CONFIG_MSG msg;
     SPPoint** flatDatabase;
     SPPoint** queryFeatures;
-    SPKDArray* kdArray;
     kdTreeNode* kdTree = NULL;
     SPBPQueue* queue = NULL, *imgQueue = NULL;
     BPQueueElement* queueElement;
@@ -32,7 +31,7 @@ int main(int argc, char* argv[]) {
     }
 
     //initialize data structures
-    kdTree = initDataStructs(flatDatabase, allFeatures);
+    kdTree = initDataStructs(flatDatabase, allFeatures, config);
     if(!kdTree) {
         spConfigDestroy(config);
         spLoggerDestroy();

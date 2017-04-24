@@ -164,8 +164,7 @@ SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip)
     return flatDatabase;
 }
 
-kdTreeNode* initDataStructs(SPPoint** features, int numFeatures) {
-    Config config;
+kdTreeNode* initDataStructs(SPPoint** features, int numFeatures, SPConfig, config) {
     SP_CONFIG_MSG msg;
     SPKDArray* kdArray = Init(features, numFeatures);
     for(int i = 0; i<numFeatures; i++) {
