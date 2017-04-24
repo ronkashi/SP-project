@@ -4,7 +4,10 @@
 
 extern "C" {
     #include "SPPoint.h"
+    #include "SPConfig.h"
 }
+
+SPConfig createConfig(int argc, char* argv[], SP_CONFIG_MSG* msg);
 
 bool spEnterQueryImg(char* queryPath);
 
