@@ -15,8 +15,14 @@ int main(int argc, char* argv[]) {
     if(!config) return -1;
 
     if(!initializeLogger(config)) return -1;
-
-    sp::ImageProc ip = sp::ImageProc(config);
+    try {
+        sp::ImageProc ip = sp::ImageProc(config);
+    } catch(...) {
+        spLoggerDestroy();
+        spConfigDestroy(config);
+        return -1;
+    }
+    
 
     flatDatabase = processFeatures(config, &allFeatures, ip);
     if(!flatDatabase) {
