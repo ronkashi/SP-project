@@ -35,7 +35,7 @@ bool initializeLogger(SPConfig config) {
     char path[MAX_LENGTH];
     SP_LOGGER_MSG msg;
     SP_CONFIG_MSG configMsg;
-    int level = spConfigGetLoggerLevel(config, &configMsg);
+    SP_LOGGER_LEVEL level = spConfigGetLoggerLevel(config, &configMsg);
     if(level < 0) return false;
     spConfigGetLoggerFilename(path, config);
     msg = spLoggerCreate((strncmp(path, "stdout", MAX_LENGTH) == 0) ? NULL : path, level);
