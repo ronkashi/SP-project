@@ -7,7 +7,6 @@
 
 int main(int argc, char* argv[]) {
     SPConfig config;
-    SP_CONFIG_MSG msg;
     SPPoint** flatDatabase;
     kdTreeNode* kdTree = NULL;
     int allFeatures=0;
@@ -34,7 +33,7 @@ int main(int argc, char* argv[]) {
 		return -1;
     }
 
-    searchByImage(config, kdTree);
+    searchByImage(config, kdTree, ip);
 
     //TODO destroy tree
     spConfigDestroy(config);

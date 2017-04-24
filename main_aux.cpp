@@ -200,8 +200,8 @@ bool spEnterQueryImg(char* queryPath) {
 	return true;
 }
 
-void searchByImage(SPConfig config, kdTreeNode* kdTree) {
-    char path[MAX_LENGTH;
+void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
+    char path[MAX_LENGTH];
     BPQueueElement* queueElement;
     SPBPQueue *queue, *imgQueue;
     int numOfImgs, kClosest, *featureHits, numQueryFeatures = 0;
