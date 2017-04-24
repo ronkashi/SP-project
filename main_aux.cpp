@@ -72,25 +72,25 @@ void freeFeatures(int i, int *nFeatures,  SPPoint*** featuresDatabase) {
     free(nFeatures);
 }
 
-int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
+SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip) {
     SP_CONFIG_MSG msg;
     char path[MAX_LENGTH];
     double *data;
     int numOfImgs, dimension, fd, *nFeatures, allFeatures;
-    SPPoint ***featuresDatabase;
+    SPPoint ***featuresDatabase, **flatDatabase;
 
     dimension = spConfigGetPCADim(config, &msg);
     numOfImgs = spConfigGetNumOfImages(config, &msg);
     nFeatures = (int*) calloc(numOfImgs, sizeof(*nFeatures));
     if (!nFeatures) {
 		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
-		return -1;
+		return NULL;
 	}
     featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
     if (!featuresDatabase) {
 		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         free(nFeatures);
-		return -1;
+		return NULL;
 	}
     if (spConfigIsExtractionMode(config, &msg)) {
         // Extract features from images
@@ -99,7 +99,7 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
             featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
             if(!featuresDatabase[i]) {
                 freeFeatures(i, nFeatures, featuresDatabase);
-                return -1;
+                return NULL;
             }
             //save to file
             msg = spConfigGetFeatsPath(path, config, i);
@@ -122,7 +122,7 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
             spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
             free(nFeatures);
             free(featuresDatabase);
-            return -1;
+            return NULL;
         }
         for(int i = 0; i<numOfImgs; i++) {
             msg = spConfigGetFeatsPath(path, config, i);
@@ -130,19 +130,19 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
             if(fd < 0) {
                 spLoggerPrintError(OPEN_FEATS_ERROR, __FILE__, __func__, __LINE__);
                 freeFeatures(i, nFeatures, featuresDatabase);
-                return -1;
+                return NULL;
             }
             read(fd, nFeatures+i, sizeof(int));
             if(nFeatures[i] <= 0) {
                 spLoggerPrintError(READ_FEATS_ERROR, __FILE__, __func__, __LINE__);
                 freeFeatures(i, nFeatures, featuresDatabase);
-                return -1;
+                return NULL;
             }
             featuresDatabase[i] = (SPPoint**) malloc(nFeatures[i] * sizeof(SPPoint*));
             if(!featuresDatabase[i]) {
                 spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
                 freeFeatures(i, nFeatures, featuresDatabase);
-                return -1;
+                return NULL;
             }
             for(int j = 0; j<nFeatures[i]; j++) {
                 read(fd, data, dimension * sizeof(double));
@@ -157,6 +157,7 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
     for(int i=0; i<numOfImgs; i++) {
         allFeatures += nFeatures[i];
     }
+    flatDatabase = (SPPoint**) malloc(allFeatures * sizeof(SPPoint*));
     int k = 0;
     for(int i=0; i<numOfImgs; i++) {
         for(int j=0; j<nFeatures[i]; j++) {
@@ -166,5 +167,6 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
     }
     free(nFeatures);
     free(featuresDatabase);
-    return allFeatures;
+    *totalFeatures = allFeatures;
+    return flatDatabase;
 }

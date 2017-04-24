@@ -24,19 +24,11 @@ int main(int argc, char* argv[]) {
 
     sp::ImageProc ip = sp::ImageProc(config);
 
-    flatDatabase = (SPPoint**) malloc(allFeatures * sizeof(SPPoint*));
+    flatDatabase = processFeatures(config, &allFeatures, ip);
     if(!flatDatabase) {
 		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         spConfigDestroy(config);
         spLoggerDestroy();
-		return -1;
-    }
-    allFeatures = processFeatures(config, flatDatabase, ip);
-    if(allFeatures <= 0) {
-		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
-        spConfigDestroy(config);
-        spLoggerDestroy();
-        free(flatDatabase);
 		return -1;
     }
 
