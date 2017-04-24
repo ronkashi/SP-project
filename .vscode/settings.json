@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "*.ts": "javascriptreact",
-        "*.c++": "cpp",
-        "*.tcc": "cpp"
-    }
-}
