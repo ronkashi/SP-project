@@ -35,7 +35,7 @@ bool initializeLogger(SPConfig config) {
     char path[MAX_LENGTH];
     SP_LOGGER_MSG msg;
     SP_CONFIG_MSG configMsg;
-    SP_LOGGER_LEVEL level = spConfigGetLoggerLevel(config, &configMsg);
+    SP_LOGGER_LEVEL level = (SP_LOGGER_LEVEL) spConfigGetLoggerLevel(config, &configMsg);
     if(level < 0) return false;
     spConfigGetLoggerFilename(path, config);
     msg = spLoggerCreate((strncmp(path, "stdout", MAX_LENGTH) == 0) ? NULL : path, level);
@@ -160,7 +160,7 @@ int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
     int k = 0;
     for(int i=0; i<numOfImgs; i++) {
         for(int j=0; j<nFeatures[i]; j++) {
-            *flatDatabase[k++] = featuresDatabase[i][j];
+            flatDatabase[k++] = featuresDatabase[i][j];
         }
         free(featuresDatabase[i]);
     }
