@@ -9,6 +9,8 @@ extern "C" {
 
 SPConfig createConfig(int argc, char* argv[], SP_CONFIG_MSG* msg);
 
+bool initializeLogger(SPConfig config);
+
 bool spEnterQueryImg(char* queryPath);
 
 #endif

@@ -15,80 +15,42 @@ extern "C"{
 #include <unistd.h>
 #include <fcntl.h>
 
+#define ALLOC_ERROR_MSG "Allocation error"
+
 int main(int argc, char* argv[]) {
     SPConfig config;
     SP_CONFIG_MSG msg;
-    SPPoint*** featuresDatabase;
     SPPoint** flatDatabase;
     SPPoint** queryFeatures;
     SPKDArray* kdArray;
     kdTreeNode* kdTree = NULL;
     SPBPQueue* queue = NULL, *imgQueue = NULL;
     BPQueueElement* queueElement;
-    int *nFeatures, *featureHits;
-    double* data;
-    int numOfImgs, dimension, fd, allFeatures=0, numQueryFeatures = 1, kClosest;
+    int *featureHits, fd, allFeatures=0, numQueryFeatures = 1, kClosest, numOfImgs;
     char path[1024];
 
-    config = createConfig(argc, argv, &msg);
-    if(config == NULL) return -1;
+    config = createConfig(argc, argv);
+    if(!config) return -1;
 
-    dimension = spConfigGetPCADim(config, &msg);
-    numOfImgs = spConfigGetNumOfImages(config, &msg);
-    nFeatures = (int*) malloc(numOfImgs * sizeof(*nFeatures));
-    featuresDatabase = (SPPoint***) malloc(numOfImgs * sizeof(*featuresDatabase));
+    if(!initializeLogger(config)) return -1;
 
     sp::ImageProc ip = sp::ImageProc(config);
 
-    if (spConfigIsExtractionMode(config, &msg)) {
-        // Extract features from images
-        for(int i = 0; i < numOfImgs; i++) {
-            msg = spConfigGetImagePath(path, config, i);
-            featuresDatabase[i] = ip.getImageFeatures(path, i, nFeatures+i);
-
-            //save to file
-            msg = spConfigGetFeatsPath(path, config, i);
-            fd = open(path, O_RDWR | O_CREAT, 0755);
-            write(fd, nFeatures+i, sizeof(int));
-            for(int j = 0; j<nFeatures[i]; j++) {
-                write(fd, spPointGetData(featuresDatabase[i][j]), dimension * sizeof(double));
-            }
-            close(fd);
-        }
-    } else {
-
-        // Extract features from file
-        data = (double*) malloc(dimension * sizeof(double));
-        for(int i = 0; i<numOfImgs; i++) {
-            msg = spConfigGetFeatsPath(path, config, i);
-            fd = open(path, O_RDWR);
-            read(fd, nFeatures+i, sizeof(int));
-            featuresDatabase[i] = (SPPoint**) malloc(nFeatures[i] * sizeof(SPPoint*));
-                        
-            for(int j = 0; j<nFeatures[i]; j++) {
-                read(fd, data, dimension * sizeof(double));
-                featuresDatabase[i][j] = spPointCreate(data, dimension, i);
-            }
-            close(fd);
-        }
-        free(data);
-        printf("Extracted from file\n");
-    }
-
-    // flattening point array so a kd tree can be created
-    for(int i=0; i<numOfImgs; i++) {
-        allFeatures += nFeatures[i];
-    }
     flatDatabase = (SPPoint**) malloc(allFeatures * sizeof(SPPoint*));
-    int k = 0;
-    for(int i=0; i<numOfImgs; i++) {
-        for(int j=0; j<nFeatures[i]; j++) {
-            flatDatabase[k++] = featuresDatabase[i][j];
-        }
-        free(featuresDatabase[i]);
+    if(!flatDatabase) {
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        spConfigDestroy(config);
+        spLoggerDestroy();
+		return -1;
     }
-    free(nFeatures);
-    free(featuresDatabase);
+    allFeatures = processFeatures(config, flatDatabase, ip);
+    if(allFeatures <= 0) {
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        spConfigDestroy(config);
+        spLoggerDestroy();
+        free(flatDatabase);
+		return -1;
+    }
 
     //initialize data structures
 
@@ -108,6 +70,8 @@ int main(int argc, char* argv[]) {
 
     queueElement = (BPQueueElement*) malloc(sizeof(BPQueueElement));
     queue = spBPQueueCreate(spConfigGetKNN(config, &msg));
+
+    numOfImgs = spConfigGetNumOfImages(config, &msg);
 
     while(spEnterQueryImg(path)) { //TODO implement bool getImageFromPath(char* path, ...)
         queryFeatures = ip.getImageFeatures(path, numOfImgs, &numQueryFeatures);
