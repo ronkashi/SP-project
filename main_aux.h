@@ -7,9 +7,11 @@ extern "C" {
     #include "SPConfig.h"
 }
 
-SPConfig createConfig(int argc, char* argv[], SP_CONFIG_MSG* msg);
+SPConfig createConfig(int argc, char* argv[]);
 
 bool initializeLogger(SPConfig config);
+
+int processFeatures(Config config, SPPoint*** flatDatabase, sp::ImageProc ip);
 
 bool spEnterQueryImg(char* queryPath);
 

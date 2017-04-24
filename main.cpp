@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
     kdTreeNode* kdTree = NULL;
     SPBPQueue* queue = NULL, *imgQueue = NULL;
     BPQueueElement* queueElement;
-    int *featureHits, fd, allFeatures=0, numQueryFeatures = 1, kClosest, numOfImgs;
+    int *featureHits, allFeatures=0, numQueryFeatures = 1, kClosest, numOfImgs;
     char path[1024];
 
     config = createConfig(argc, argv);
