@@ -64,7 +64,7 @@ SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip)
     SP_CONFIG_MSG msg;
     char path[MAX_LENGTH];
     double *data;
-    int numOfImgs, dimension, fd, *nFeatures, allFeatures;
+    int numOfImgs, dimension, fd, *nFeatures, allFeatures = 0;
     SPPoint ***featuresDatabase, **flatDatabase;
 
     dimension = spConfigGetPCADim(config, &msg);
@@ -164,7 +164,7 @@ SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip)
     return flatDatabase;
 }
 
-kdTreeNode* initDataStructs(SPPoint** features, int numFeatures, SPConfig, config) {
+kdTreeNode* initDataStructs(SPPoint** features, int numFeatures, SPConfig config) {
     SP_CONFIG_MSG msg;
     SPKDArray* kdArray = Init(features, numFeatures);
     for(int i = 0; i<numFeatures; i++) {
