@@ -7,6 +7,8 @@ extern "C" {
     #include "SPConfig.h"
 }
 
+#include "SPImageProc.h"
+
 SPConfig createConfig(int argc, char* argv[]);
 
 bool initializeLogger(SPConfig config);

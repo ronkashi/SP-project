@@ -9,7 +9,6 @@ extern "C"{
     #include "SPKDTree.h"
 }
 
-#include "SPImageProc.h"
 #include "main_aux.h"
 #include <stdlib.h>
 #include <unistd.h>

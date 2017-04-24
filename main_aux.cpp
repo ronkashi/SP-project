@@ -1,5 +1,4 @@
 #include "main_aux.h"
-#include "SPImageProc.h"
 
 #include <cstdio>
 #include <cstring>
