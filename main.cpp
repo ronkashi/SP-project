@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
     char path[1024];
 
     config = createConfig(argc, argv, &msg);
+    if(config == NULL) return -1;
 
     dimension = spConfigGetPCADim(config, &msg);
     numOfImgs = spConfigGetNumOfImages(config, &msg);
