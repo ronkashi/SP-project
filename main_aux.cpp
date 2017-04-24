@@ -76,7 +76,7 @@ void freeFeatures(int i, int *nFeatures,  SPPoint*** featuresDatabase) {
     free(nFeatures);
 }
 
-int processFeatures(SPConfig config, SPPoint*** flatDatabase, sp::ImageProc ip) {
+int processFeatures(SPConfig config, SPPoint** flatDatabase, sp::ImageProc ip) {
     SP_CONFIG_MSG msg;
     char path[MAX_LENGTH];
     double *data;
