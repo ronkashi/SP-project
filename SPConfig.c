@@ -5,6 +5,7 @@
 #include <string.h>
 
 #define MAX_LENGTH 1024
+#define CONFIG_ALLOC_ERROR "Config memmory allocation failure\n"
 
 struct sp_config_t {
     char spImagesDirectory[MAX_LENGTH];
@@ -31,7 +32,7 @@ SPConfig spConfigCreate(const char* filename, SP_CONFIG_MSG* msg) {
     char *token1, *token2, *trimString;
 
     if(msg == NULL) {
-        printf("Invalid argument");
+        printf("Invalid argument\n");
         return NULL;
     }
     if(filename == NULL) {
@@ -46,6 +47,7 @@ SPConfig spConfigCreate(const char* filename, SP_CONFIG_MSG* msg) {
     config = (SPConfig) malloc(sizeof(*config));
     if(config == NULL) {
         *msg = SP_CONFIG_ALLOC_FAIL;
+        printf(CONFIG_ALLOC_ERROR);
         return NULL;
     }
 

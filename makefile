@@ -24,8 +24,8 @@ main.o: main.cpp SPConfig.h SPImageProc.h SPPoint.h SPLogger.h SPKDTree.h SPKDAr
 #use g++ -MM SPImageProc.cpp to see dependencies
 SPImageProc.o: SPImageProc.cpp SPImageProc.h SPConfig.h SPPoint.h SPLogger.h
 	$(CPP) $(CPP_COMP_FLAG) -I$(INCLUDEPATH) -c $*.cpp
-main_aux.o: main_aux.cpp main_aux.h
-	$(CPP) $(CPP_COMP_FLAG) -c $*.cpp
+main_aux.o: main_aux.cpp main_aux.h SPConfig.h SPImageProc.h SPPoint.h SPLogger.h
+	$(CPP) $(CPP_COMP_FLAG) -I$(INCLUDEPATH) -c $*.cpp
 #a rule for building a simple c source file
 #use "gcc -MM SPPoint.c" to see the dependencies
 SPPoint.o: SPPoint.c SPPoint.h 
