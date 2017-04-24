@@ -23,6 +23,9 @@ bool initializeLogger(SPConfig config);
 
 SPPoint** processFeatures(SPConfig config, int* allFeatures, sp::ImageProc ip);
 
+kdTreeNode* initDataStructs(SPPoint** features, int numFeatures);
+
+
 bool spEnterQueryImg(char* queryPath);
 
 #endif

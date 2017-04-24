@@ -26,27 +26,18 @@ int main(int argc, char* argv[]) {
 
     flatDatabase = processFeatures(config, &allFeatures, ip);
     if(!flatDatabase) {
-		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
         spConfigDestroy(config);
         spLoggerDestroy();
 		return -1;
     }
 
     //initialize data structures
-
-    kdArray = Init(flatDatabase, allFeatures);
-    for(int i = 0; i<allFeatures; i++) {
-        spPointDestroy(flatDatabase[i]);
+    kdTree = initDataStructs(flatDatabase, allFeatures);
+    if(!kdTree) {
+        spConfigDestroy(config);
+        spLoggerDestroy();
+		return -1;
     }
-    free(flatDatabase);
-    printf("Array created\n");
-    kdTree = (kdTreeNode*) malloc(sizeof(*kdTree));
-
-    if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
-        //TODO free mem and exit if initializing tree fails
-    }
-    printf("Array size: %d\n", getKdArraySize(kdArray));
-    spKdArrayDestroy(kdArray);
 
     queueElement = (BPQueueElement*) malloc(sizeof(BPQueueElement));
     queue = spBPQueueCreate(spConfigGetKNN(config, &msg));

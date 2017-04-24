@@ -49,18 +49,6 @@ bool initializeLogger(SPConfig config) {
     return true;
 }
 
-bool spEnterQueryImg(char* queryPath) {
-	if (NULL == queryPath) {
-		return false;
-	}
-	printf("Please enter an image path:\n");
-	scanf("%s*c", queryPath);
-	if (queryPath[0] == '<' && queryPath[1] == '>') {
-		return false;
-	}
-	return true;
-}
-
 void freeFeatures(int i, int *nFeatures,  SPPoint*** featuresDatabase) {
     for(int j = 0; j<i; j++) {
         for(int k = 0; k<nFeatures[j]; k++) {
@@ -158,6 +146,11 @@ SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip)
         allFeatures += nFeatures[i];
     }
     flatDatabase = (SPPoint**) malloc(allFeatures * sizeof(SPPoint*));
+    if(!flatDatabase) {
+        spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        freeFeatures(numOfImgs, nFeatures, featuresDatabase);
+        return NULL;
+    }
     int k = 0;
     for(int i=0; i<numOfImgs; i++) {
         for(int j=0; j<nFeatures[i]; j++) {
@@ -169,4 +162,41 @@ SPPoint** processFeatures(SPConfig config, int* totalFeatures, sp::ImageProc ip)
     free(featuresDatabase);
     *totalFeatures = allFeatures;
     return flatDatabase;
+}
+
+kdTreeNode* initDataStructs(SPPoint** features, int numFeatures) {
+    Config config;
+    SP_CONFIG_MSG msg;
+    SPKDArray* kdArray = Init(features, numFeatures);
+    for(int i = 0; i<numFeatures; i++) {
+        spPointDestroy(features[i]);
+    }
+    free(features);
+    if(!kdArray) return NULL;
+
+    kdTreeNode* kdTree = (kdTreeNode*) malloc(sizeof(*kdTree));
+    if(!kdTree) {
+        spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+        spKdArrayDestroy(kdArray);
+        return NULL;
+    }
+
+    if(spKdTreeInit(kdArray, kdTree, spConfigGetKDTreeSplitMethod(config, &msg), 0) < 0) {
+        spKdArrayDestroy(kdArray);
+        return NULL;
+    }
+    spKdArrayDestroy(kdArray);
+    return kdTree;
+}
+
+bool spEnterQueryImg(char* queryPath) {
+	if (NULL == queryPath) {
+		return false;
+	}
+	printf("Please enter an image path:\n");
+	scanf("%s*c", queryPath);
+	if (queryPath[0] == '<' && queryPath[1] == '>') {
+		return false;
+	}
+	return true;
 }
