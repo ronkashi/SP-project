@@ -248,7 +248,6 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
 
         for (int i = 0; i < numOfImgs; i++) {
             spBPQueueEnqueue(imgQueue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
-            printf("%d: %d,\t", i, featureHits[i]);
         }
         free(featureHits);
 
