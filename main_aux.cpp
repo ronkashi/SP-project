@@ -219,6 +219,7 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
         free(queueElement);
         return;
     }
+    kClosest = spConfigGetNumOfSimilarImgs(config, &msg);
     imgQueue = spBPQueueCreate(kClosest);
     if(!imgQueue) {
         spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
@@ -227,8 +228,6 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
         return;
     }
     numOfImgs = spConfigGetNumOfImages(config, &msg);
-    kClosest = spConfigGetNumOfSimilarImgs(config, &msg);
-    
 
     while(spEnterQueryImg(path)) {
         queryFeatures = ip.getImageFeatures(path, numOfImgs, &numQueryFeatures);
@@ -249,6 +248,7 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
 
         for (int i = 0; i < numOfImgs; i++) {
             spBPQueueEnqueue(imgQueue, i, (double) ((kClosest * numQueryFeatures) - featureHits[i]));
+            printf("%d: %d,\t", i, featureHits[i]);
         }
         free(featureHits);
 
@@ -275,9 +275,7 @@ void searchByImage(SPConfig config, kdTreeNode* kdTree, sp::ImageProc ip) {
         free(queryFeatures);
     }
 
-    // TODO kdTreeDestroy();
     spBPQueueDestroy(imgQueue);
-
     spBPQueueDestroy(queue);
     free(queueElement);
 }
