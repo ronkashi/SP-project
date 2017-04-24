@@ -12,16 +12,16 @@
 #define READ_FEATS_ERROR "Unable to read features from file"
 
 SPConfig createConfig(int argc, char* argv[]) {
-    SP_CONFIG_MSG* msg;
+    SP_CONFIG_MSG msg;
 	SPConfig config;
 	if(argc == 1) {
-        config = spConfigCreate(DEFAULT_CONFIG, msg);
-        if(*msg == SP_CONFIG_CANNOT_OPEN_FILE) {
+        config = spConfigCreate(DEFAULT_CONFIG, &msg);
+        if(msg == SP_CONFIG_CANNOT_OPEN_FILE) {
             printf(DEFAULT_CONFIG_ERROR);
         }
     } else if(argc == 3 && (strcmp(argv[1], "-c") == 0)) {
-        config = spConfigCreate(argv[2], msg);
-        if(*msg == SP_CONFIG_CANNOT_OPEN_FILE) {
+        config = spConfigCreate(argv[2], &msg);
+        if(msg == SP_CONFIG_CANNOT_OPEN_FILE) {
             printf(CONFIG_ERROR, argv[2]);
         }
     } else {
