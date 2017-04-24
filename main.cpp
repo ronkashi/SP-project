@@ -10,13 +10,14 @@ int main(int argc, char* argv[]) {
     SPPoint** flatDatabase;
     kdTreeNode* kdTree = NULL;
     int allFeatures=0;
+    sp::ImageProc ip;
 
     config = createConfig(argc, argv);
     if(!config) return -1;
 
     if(!initializeLogger(config)) return -1;
     try {
-        sp::ImageProc ip = sp::ImageProc(config);
+        ip = sp::ImageProc(config);
     } catch(...) {
         spLoggerDestroy();
         spConfigDestroy(config);
