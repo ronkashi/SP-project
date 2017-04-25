@@ -22,7 +22,6 @@ extern "C" {
 #define CONFIG_ERROR "The configuration file %s couldn't be open\n"
 #define INVALID_COMMAND "Invalid command line: use -c <config_filename>\n"
 #define MAX_LENGTH 1024
-#define ALLOC_ERROR_MSG "Allocation error"
 #define LOG_FILE_ERROR "Cannot open logger file\n"
 #define WRITE_TO_FILE_ERROR "features could not be saved to file"
 #define OPEN_FEATS_ERROR "Features file could not be opened"
