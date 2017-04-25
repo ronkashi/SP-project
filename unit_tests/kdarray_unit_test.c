@@ -45,6 +45,7 @@ static bool basicInitKdTest() {
 	for (i = 0; i < POINT_NUM; ++i) {
 		spPointDestroy(p_arr[i]);
 	}
+	spKdArrayDestroy(kdarr);
 	free(p_arr);
 	return true;
 }
@@ -68,6 +69,13 @@ static bool basicSplitKdTest() {
 	printKDArray(left);
 	printf("\n");
 	printKDArray(right);
+
+	spKdArrayDestroy(right);
+	spKdArrayDestroy(left);
+	for (i = 0; i < POINT_NUM; ++i) {
+		spPointDestroy(p_arr[i]);
+	}
+	free(p_arr);
 	return true;
 }
 
