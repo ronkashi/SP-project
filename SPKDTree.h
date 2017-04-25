@@ -6,6 +6,8 @@
 #include "SPBPriorityQueue.h"
 #include "SPPoint.h"
 #include "SPConfig.h"
+#include "main_aux.h"
+
 #include <malloc.h>
 #include <stdio.h>
 #include <time.h>
@@ -26,3 +28,5 @@ int getMaxCoorOfSpread(SPKDArray* arr);
 int spKdTreeInit(SPKDArray* arr,kdTreeNode* root,SPLIT_CRITERIA op,int level);
 
 int kNearestNeighbors(kdTreeNode* curr ,SPBPQueue* bpq, SPPoint* P);
+
+int spKdTreeDestroy(kdTreeNode* root);

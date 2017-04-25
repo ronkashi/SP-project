@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         spConfigDestroy(config);
         return -1;
     }
-    
+
 
     flatDatabase = processFeatures(config, &allFeatures, *ip);
     if(!flatDatabase) {

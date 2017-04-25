@@ -1,5 +1,6 @@
 
 #include "SPPoint.h"
+#include "main_aux.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -17,6 +18,13 @@ SPKDArray* Init(SPPoint** arr, int size);
  * n//2+1 points with respect to the coordinate coor are in kdLeft , and the rest of the points are in
  * kdRight.
  * The complexity of this operation is d*n.
+ *
+ * 1.parse the way of spliting & which coor to split by
+ * 2. in O(n) split to above median and below
+ * 3.build the matrix sorted
+ *
+ * 3 arg kd_array_left_side
+ * 4 arg kd_array_right_side
  */
 bool Split(SPKDArray* kdArr, int coor,SPKDArray* kdLeft, SPKDArray* kdRight);
 

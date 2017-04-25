@@ -1,6 +1,6 @@
 #include "SPKDTree.h"
 
-#define spKNN 3 //TODO ask from config
+#define spKNN 3
 
 int getCoorToSplitBy(SPKDArray* arr, SPLIT_CRITERIA op, int level) {
 	switch (op) {
@@ -42,6 +42,20 @@ int getMaxCoorOfSpread(SPKDArray* arr) {
 	return max_spread_index;
 }
 
+int spKdtreeDestroy(kdTreeNode* root){
+	if (NULL == root){
+		return 0;
+	}
+	if(NULL != root->Right){
+		spKdtreeDestroy(root->Right);
+	}
+	if(NULL != root->Left){
+		spKdtreeDestroy(root->Left);
+	}
+	free(root);
+	return 0;
+}
+
 int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level) {
 	if (NULL == arr) {
 		return -1;
@@ -69,12 +83,16 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 			root->Dim);
 	kdLeft = (SPKDArray*) calloc(1, sizeof(kdLeft));
 	if(NULL == kdLeft){
-		return -1;//TODO mem alloc fail
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+		spKdTreeDestroy(root);
+		return -1;
 	}
 	kdRight = (SPKDArray*) calloc(1, sizeof(kdRight));
 	if(NULL == kdRight){
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+		spKdTreeDestroy(root);
 		free(kdLeft);
-		return -1;//TODO mem alloc fail
+		return -1;
 	}
 	if (false == Split(arr, root->Dim, kdLeft, kdRight)) {
 		return -1;
@@ -82,15 +100,18 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	level++;
 	root->Left = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 	if (NULL == root->Left) {
-		//TODO allocation fail
-		printf("tree malloc fail\n");
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+		spKdTreeDestroy(root);
+		spKdArrayDestroy(kdRight);
+		spKdArrayDestroy(kdLeft);
 		return -1;
 	}
 	root->Right = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 	if (NULL == root->Right) {
-		//TODO allocation fail
-		free(root->Left);
-		printf("tree malloc fail\n");
+		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
+		spKdTreeDestroy(root);
+		spKdArrayDestroy(kdRight);
+		spKdArrayDestroy(kdLeft);
 		return -1;
 	}
 	spKdTreeInit(kdLeft, root->Left, op, level);
