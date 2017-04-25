@@ -6,7 +6,7 @@
 #include "SPBPriorityQueue.h"
 #include "SPPoint.h"
 #include "SPConfig.h"
-#include "main_aux.h"
+#include "SPLogger.h"
 
 #include <malloc.h>
 #include <stdio.h>

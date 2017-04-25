@@ -42,15 +42,15 @@ int getMaxCoorOfSpread(SPKDArray* arr) {
 	return max_spread_index;
 }
 
-int spKdtreeDestroy(kdTreeNode* root){
+int spKdTreeDestroy(kdTreeNode* root){
 	if (NULL == root){
 		return 0;
 	}
 	if(NULL != root->Right){
-		spKdtreeDestroy(root->Right);
+		spKdTreeDestroy(root->Right);
 	}
 	if(NULL != root->Left){
-		spKdtreeDestroy(root->Left);
+		spKdTreeDestroy(root->Left);
 	}
 	free(root);
 	return 0;

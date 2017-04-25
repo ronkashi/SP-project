@@ -1,6 +1,7 @@
 
 #include "SPPoint.h"
-#include "main_aux.h"
+#include "SPLogger.h"
+#include "SPConfig.h"
 #include <stdbool.h>
 #include <stdio.h>
 

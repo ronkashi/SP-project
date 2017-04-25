@@ -30,9 +30,9 @@ main_aux.o: main_aux.cpp main_aux.h SPConfig.h SPImageProc.h SPPoint.h SPLogger.
 #use "gcc -MM SPPoint.c" to see the dependencies
 SPPoint.o: SPPoint.c SPPoint.h 
 	$(CC) $(C_COMP_FLAG) -c $*.c
-SPKDTree.o: SPKDTree.c SPKDTree.h SPKDArray.h SPPoint.h SPConfig.h SPBPriorityQueue.h
+SPKDTree.o: SPKDTree.c SPKDTree.h SPKDArray.h SPPoint.h SPConfig.h SPBPriorityQueue.h SPLogger.h
 	$(CC) $(C_COMP_FLAG) -c $*.c
-SPKDArray.o: SPKDArray.c SPKDArray.h SPPoint.h 
+SPKDArray.o: SPKDArray.c SPKDArray.h SPPoint.h SPConfig.h SPLogger.h
 	$(CC) $(C_COMP_FLAG) -c $*.c
 SPConfig.o: SPConfig.c SPConfig.h SPLogger.h
 	$(CC) $(C_COMP_FLAG) -c $*.c
