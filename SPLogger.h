@@ -1,5 +1,8 @@
 #ifndef SPLOGGER_H_
 #define SPLOGGER_H_
+
+#define ALLOC_ERROR_MSG "Allocation error"
+
 /**
  * SP Logger summary:
  * SP Logger is defined at compilation time and it must be initialized
