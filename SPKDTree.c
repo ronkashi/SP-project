@@ -47,10 +47,10 @@ int spKdTreeDestroy(kdTreeNode* root){
 		return 0;
 	}
 	if(NULL != root->Right){
-		spKdtreeDestroy(root->Right);
+		spKdTreeDestroy(root->Right);
 	}
 	if(NULL != root->Left){
-		spKdtreeDestroy(root->Left);
+		spKdTreeDestroy(root->Left);
 	}
 	free(root);
 	return 0;
