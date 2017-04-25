@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
     searchByImage(config, kdTree, *ip);
 
-    //TODO destroy tree
+    spKdTreeDestroy(kdTree);
     free(ip);
     spConfigDestroy(config);
     spLoggerDestroy();
