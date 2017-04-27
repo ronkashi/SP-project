@@ -63,7 +63,7 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	}
 
 	if (getKdArraySize(arr) == 1) {
-		root->Data = getKdArrayCopyArr(arr)[0];
+		root->Data = spPointCopy(getKdArrayCopyArr(arr)[0]);
 		root->Dim = -1;
 		root->Left = NULL;
 		root->Right = NULL;
@@ -98,7 +98,6 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (false == Split(arr, root->Dim, kdLeft, kdRight)) {
 		return -1;
 	}
-	spKdArrayDestroy(arr);
 	level++;
 	root->Left = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 	if (NULL == root->Left) {
@@ -117,7 +116,9 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 		return -1;
 	}
 	spKdTreeInit(kdLeft, root->Left, op, level);
+	spKdArrayDestroy(kdLeft);
 	spKdTreeInit(kdRight, root->Right, op, level);
+	spKdArrayDestroy(kdRight);
 	return 0;
 }
 bool isLeaf(kdTreeNode* node) {

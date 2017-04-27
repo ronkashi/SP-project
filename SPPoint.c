@@ -49,7 +49,9 @@ SPPoint* spPointCopy(SPPoint* source) {
 
 void spPointDestroy(SPPoint* point) {
 	if (point != NULL) {
-		free(point->data);
+		if (point->data != NULL) {
+			free(point->data);
+		}
 		free(point);
 	}
 	return;

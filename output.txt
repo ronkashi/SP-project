@@ -1,0 +1,5 @@
+---ERROR---
+- file: main_aux.cpp
+- function: processFeatures
+- line: 119
+- message: Features file could not be opened

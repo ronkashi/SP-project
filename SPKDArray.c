@@ -33,18 +33,22 @@ void spKdArrayDestroy(SPKDArray* kd_array) {
 	if (NULL != kd_array) {
 		if (NULL != kd_array->copy_arr) {
 			for (i = 0; i < kd_array->size; i++) {
-				spPointDestroy(kd_array->copy_arr[i]);
+				if (NULL != kd_array->copy_arr[i]) {
+					spPointDestroy(kd_array->copy_arr[i]);
+				}
 			}
 			free(kd_array->copy_arr);
 		}
 		if ((NULL != kd_array->mat)) {
 			for (i = 0; i < kd_array->dim; i++) {
-				free(kd_array->mat[i]);
+				if ((NULL != kd_array->mat[i])) {
+					free(kd_array->mat[i]);
+				}
 			}
 			free(kd_array->mat);
 		}
+		free(kd_array);
 	}
-	free(kd_array);
 	return;
 }
 
