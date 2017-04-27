@@ -82,7 +82,7 @@ SPKDArray* Init(SPPoint** arr, int size) {
 		if (!kd_array->copy_arr[i]) {
 			spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
 			spKdArrayDestroy(kd_array);
-			return NULL;;
+			return NULL;
 		}
 		kd_array->size++;
 	}
@@ -204,6 +204,7 @@ bool Split(SPKDArray* kdArr, int coor, SPKDArray* kdLeft, SPKDArray* kdRight) {
 			}
 		}
 	}
+	free(reverseMap);
 
 	for (i = 0; i < kdLeft->size; i++) {
 		kdLeft->copy_arr[i] = spPointCopy(kdArr->copy_arr[kdArr->mat[coor][i]]);
@@ -215,8 +216,7 @@ bool Split(SPKDArray* kdArr, int coor, SPKDArray* kdLeft, SPKDArray* kdRight) {
 	}
 
 	for (i = 0; i < kdRight->size; i++) {
-		kdRight->copy_arr[i] = spPointCopy(
-				kdArr->copy_arr[kdArr->mat[coor][i + round_up_med]]);
+		kdRight->copy_arr[i] = spPointCopy(kdArr->copy_arr[kdArr->mat[coor][i + round_up_med]]);
 		if (kdRight->copy_arr[i] == NULL) {
 			spKdArrayDestroy(kdLeft);
 			spKdArrayDestroy(kdRight);

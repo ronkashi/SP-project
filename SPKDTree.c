@@ -1,7 +1,5 @@
 #include "SPKDTree.h"
 
-#define spKNN 3
-
 int getCoorToSplitBy(SPKDArray* arr, SPLIT_CRITERIA op, int level) {
 	switch (op) {
 	case MAX_SPREAD:
@@ -52,6 +50,9 @@ int spKdTreeDestroy(kdTreeNode* root){
 	if(NULL != root->Left){
 		spKdTreeDestroy(root->Left);
 	}
+	if(NULL != root->Data){
+		spPointDestroy(root->Data);
+	}
 	free(root);
 	return 0;
 }
@@ -97,6 +98,7 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (false == Split(arr, root->Dim, kdLeft, kdRight)) {
 		return -1;
 	}
+	spKdArrayDestroy(arr);
 	level++;
 	root->Left = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 	if (NULL == root->Left) {
