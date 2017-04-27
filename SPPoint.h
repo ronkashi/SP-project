@@ -1,6 +1,12 @@
 #ifndef SPPOINT_H_
 #define SPPOINT_H_
 
+
+#include <stdlib.h>
+#include <math.h>
+#include <assert.h>
+#include <stdio.h>
+#include <unistd.h>
 /**
  * SPPoint Summary
  * Encapsulates a point with variable length dimension. The coordinates

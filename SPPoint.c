@@ -5,10 +5,7 @@
  *      Author: gavrielc
  */
 #include "SPPoint.h"
-#include <stdlib.h>
-#include <math.h>
-#include <assert.h>
-#include <stdio.h>
+
 
 int SortCoor;
 struct sp_point_t {
