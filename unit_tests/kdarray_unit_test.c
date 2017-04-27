@@ -35,51 +35,58 @@ static bool basicInitKdTest() {
 	}
 	SPKDArray* kdarr = Init(p_arr, POINT_NUM);
 	printKDArray(kdarr);
+	printf("hereeee%s\n", "1");
 
 	for (i = 0; i < POINT_NUM; ++i) {
 		for(j=0;j<DIM +1 ; i++){
 			ASSERT_TRUE( getKdArrayMat(kdarr)[i][j] = expected[i*(DIM+1)+j]);
 		}
 	}
+		printf("hereeee%s\n", "1");
+
 	for (i = 0; i < POINT_NUM; ++i) {
 		spPointDestroy(p_arr[i]);
 	}
+		printf("hereeee%s\n", "1");
+
 	spKdArrayDestroy(kdarr);
+		printf("hereeee%s\n", "1");
+
 	free(p_arr);
 	return true;
 }
 
-static bool basicSplitKdTest() {
-	double data[POINT_NUM][DIM] = { { 1, 2 }, { 123, 70 }, { 2, 7 }, { 9, 11 },
-			{ 3, 4 } };
+// static bool basicSplitKdTest() {
+// 	double data[POINT_NUM][DIM] = { { 1, 2 }, { 123, 70 }, { 2, 7 }, { 9, 11 },
+// 			{ 3, 4 } };
 
-	int i;
-	SPPoint** p_arr = (SPPoint**) malloc(POINT_NUM * sizeof(*p_arr));
-	for (i = 0; i < POINT_NUM; ++i) {
-		p_arr[i] = spPointCreate(data[i], DIM, 97 + i);
-	}
-	SPKDArray* kdarr = Init(p_arr, POINT_NUM);
-	printKDArray(kdarr);
-	SPKDArray* left = NULL;
-	SPKDArray* right = NULL;
-	left = (SPKDArray*) calloc(1, sizeof(left));
-	right = (SPKDArray*) calloc(1, sizeof(right));
-	Split(kdarr, 0, left, right);
-	printf("\n");
-	printKDArray(left);
-	printf("\n");
-	printKDArray(right);
+// 	int i;
+// 	SPPoint** p_arr = (SPPoint**) malloc(POINT_NUM * sizeof(*p_arr));
+// 	for (i = 0; i < POINT_NUM; ++i) {
+// 		p_arr[i] = spPointCreate(data[i], DIM, 97 + i);
+// 	}
+// 	SPKDArray* kdarr = Init(p_arr, POINT_NUM);
+// 	printKDArray(kdarr);
+// 	SPKDArray* left = NULL;
+// 	SPKDArray* right = NULL;
+// 	left = (SPKDArray*) calloc(1, sizeof(left));
+// 	right = (SPKDArray*) calloc(1, sizeof(right));
+// 	Split(kdarr, 0, left, right);
+// 	printf("\n");
+// 	printKDArray(left);
+// 	printf("\n");
+// 	printKDArray(right);
 
-	spKdArrayDestroy(right);
-	spKdArrayDestroy(left);
-	for (i = 0; i < POINT_NUM; ++i) {
-		spPointDestroy(p_arr[i]);
-	}
-	free(p_arr);
-	return true;
-}
+// 	spKdArrayDestroy(right);
+// 	spKdArrayDestroy(left);
+// 	for (i = 0; i < POINT_NUM; ++i) {
+// 		spPointDestroy(p_arr[i]);
+// 	}
+// 	free(p_arr);
+// 	return true;
+// }
 
-int main(int argc, char const *argv[]) {
+int main() {
 	RUN_TEST(basicInitKdTest);
 	//RUN_TEST(basicSplitKdTest);
 	printf("Completed!\n");
