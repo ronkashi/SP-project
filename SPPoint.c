@@ -119,7 +119,7 @@ int* spPointSortByCoor(SPPoint** arr, int size, int coor) {
 	SortCoor = coor;
 	qsort(arr, size, sizeof(SPPoint*),cmpfunc);
 	for (i = 0; i < size; i++) {
-		indexes[i] = (int)floor(spPointGetAxisCoor(arr[i], arr[i]->dim - 1));
+		indexes[i] = (int)(spPointGetAxisCoor(arr[i], arr[i]->dim - 1));
 	}
 	return indexes;
 }

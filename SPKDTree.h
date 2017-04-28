@@ -30,3 +30,15 @@ int spKdTreeInit(SPKDArray* arr,kdTreeNode* root,SPLIT_CRITERIA op,int level);
 int kNearestNeighbors(kdTreeNode* curr ,SPBPQueue* bpq, SPPoint* P);
 
 int spKdTreeDestroy(kdTreeNode* root);
+
+////getters//////
+
+int getKdTreeNodeDim(kdTreeNode* root);
+
+double getKdTreeNodeVal(kdTreeNode* root);
+
+SPPoint* getKdTreeNodeData(kdTreeNode* root);
+
+kdTreeNode* getKdTreeNodeLeftChild(kdTreeNode* root);
+
+kdTreeNode* getKdTreeNodeRightChild(kdTreeNode* root);

@@ -169,3 +169,58 @@ int kNearestNeighbors(kdTreeNode* curr, SPBPQueue* bpq, SPPoint* P) {
 
 	return 0;
 }
+
+
+////getters//////
+
+int getKdTreeNodeDim(kdTreeNode* root){
+	if (NULL == root){
+		return -1;
+	}
+	return root->Dim;
+}
+
+
+double getKdTreeNodeVal(kdTreeNode* root){
+	if (NULL == root){
+		return -1;
+	}
+	return root->Val;
+}
+
+SPPoint* getKdTreeNodeData(kdTreeNode* root){
+	if (NULL == root){
+		return NULL;
+	}
+	return root->Data;
+}
+
+kdTreeNode* getKdTreeNodeLeftChild(kdTreeNode* root){
+	if (NULL == root){
+		return NULL;
+	}
+	return root->Left;
+}
+
+kdTreeNode* getKdTreeNodeRightChild(kdTreeNode* root){
+	if (NULL == root){
+		return NULL;
+	}
+	return root->Right;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
