@@ -70,10 +70,40 @@ static bool basicLoggerDebugTest() {
 	return true;
 }
 
+//Only Error and Warning messages should be printed in Warning level
+static bool loggerWarningTest() {
+	const char* expectedFile = "LoggerWarningTestExp.log";
+	const char* testFile = "LoggerWarningTest.log";
+	ASSERT_TRUE(spLoggerCreate(testFile,SP_LOGGER_WARNING_ERROR_LEVEL) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintError("MSGA","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintWarning("MSGB","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintInfo("MSGC") == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintDebug("MSGD","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	spLoggerDestroy();
+	ASSERT_TRUE(identicalFiles(testFile,expectedFile));
+	return true;
+}
+
+//Only Debug messages should NOT be printed in Info level
+static bool loggerInfoTest() {
+	const char* expectedFile = "LoggerInfoTestExp.log";
+	const char* testFile = "LoggerInfoTest.log";
+	ASSERT_TRUE(spLoggerCreate(testFile,SP_LOGGER_INFO_WARNING_ERROR_LEVEL) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintError("MSGA","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintWarning("MSGB","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintInfo("MSGC") == SP_LOGGER_SUCCESS);
+	ASSERT_TRUE(spLoggerPrintDebug("MSGD","sp_logger_unit_test.c",__func__,__LINE__) == SP_LOGGER_SUCCESS);
+	spLoggerDestroy();
+	ASSERT_TRUE(identicalFiles(testFile,expectedFile));
+	return true;
+}
+
 int main() {
 	RUN_TEST(basicLoggerTest);
 	RUN_TEST(basicLoggerErrorTest);
 	RUN_TEST(basicLoggerDebugTest);
+	RUN_TEST(loggerWarningTest);
+	RUN_TEST(loggerInfoTest);
 	printf("Completed!\n");
 	return 0;
 }
