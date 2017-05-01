@@ -113,9 +113,24 @@ double spPointGetAxisCoor(SPPoint* point, int axis);
  * The L2-Squared distance between p and q
  */
 double spPointL2SquaredDistance(SPPoint* p, SPPoint* q);
+
+/*
+*for an input point with dim : d 
+* the func allocate a new point coppy all the data from input
+* and extend the dim to d+1 and insert to the last coor the parameter : val
+*/
 SPPoint* spPointAddDimention(SPPoint* p,double val);
+
+/*
+* sort a array of points by each coor
+*/
 int* spPointSortByCoor(SPPoint** arr,int size,int coor);
+
+/*
+*compare func between 2 points coors
+*/
 int cmpfunc (const void * a, const void * b);
-SPPoint* spPointDecreaseDimention(SPPoint* p);
+
+//getter
 double* spPointGetData(SPPoint* p);
 #endif /* SPPOINT_H_ */
