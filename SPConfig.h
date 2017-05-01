@@ -186,16 +186,105 @@ SP_CONFIG_MSG spConfigGetPCAPath(char* pcaPath, const SPConfig config);
  */
 void spConfigDestroy(SPConfig config);
 
+/*
+ * Returns the number of similar images to be returned for a query image, as set in 
+ * the configuration file, i.e the value of spNumOfSimilarImages.
+ *
+ * @param config - the configuration structure
+ * @assert msg != NULL
+ * @param msg - pointer in which the msg returned by the function is stored
+ * @return positive integer in success, negative integer otherwise.
+ *
+ * - SP_CONFIG_INVALID_ARGUMENT - if config == NULL
+ * - SP_CONFIG_SUCCESS - in case of success
+ */
 int spConfigGetNumOfSimilarImgs(const SPConfig config, SP_CONFIG_MSG* msg);
 
+/*
+ * Returns the number of nearest neighbours to be used in the KNN search, as set in 
+ * the configuration file, i.e the value of spKNN.
+ *
+ * @param config - the configuration structure
+ * @assert msg != NULL
+ * @param msg - pointer in which the msg returned by the function is stored
+ * @return positive integer in success, negative integer otherwise.
+ *
+ * - SP_CONFIG_INVALID_ARGUMENT - if config == NULL
+ * - SP_CONFIG_SUCCESS - in case of success
+ */
 int spConfigGetKNN(const SPConfig config, SP_CONFIG_MSG* msg);
 
+/*
+ * Returns a number in the range {1,4} representing the Logger Level, as set in 
+ * the configuration file, i.e the value of spLoggerLevel.
+ *
+ * @param config - the configuration structure
+ * @assert msg != NULL
+ * @param msg - pointer in which the msg returned by the function is stored
+ * @return positive integer in success, negative integer otherwise.
+ *
+ * - SP_CONFIG_INVALID_ARGUMENT - if config == NULL
+ * - SP_CONFIG_SUCCESS - in case of success
+ */
 int spConfigGetLoggerLevel(const SPConfig config, SP_CONFIG_MSG* msg);
 
+/**
+ * The function stores in loggerFilename the name of the file where  the logger output
+ * will be written. If the default will be used then "stdout" will be returned.
+ *
+ * The functions stores the file name to the address given by loggerFilename.
+ * Thus the address given by loggerFilename must contain enough space to
+ * store the resulting string.
+ *
+ * @param loggerFilename - an address to store the result in, it must contain enough space.
+ * @param config - the configuration structure
+ * @return
+ *  - SP_CONFIG_INVALID_ARGUMENT - if loggerFilename == NULL or config == NULL
+ *  - SP_CONFIG_SUCCESS - in case of success
+ */
 SP_CONFIG_MSG spConfigGetLoggerFilename(char* loggerFilename, const SPConfig config);
 
+/**
+ * The function returns an enum representing the splitting criterea, as set in the
+ * config file.
+ *
+ * @param config - the configuration structure
+ * @assert msg != NULL
+ * @param msg - pointer in which the msg returned by the function is stored
+ * @return
+ *  - RANDOM - if split criterea is random
+ *  - MAX_SPREAD - if the split criterea is set to max spread
+ *  - INCREMENTAL - if the split criterea is set to incremental
+ *
+ * - SP_CONFIG_INVALID_ARGUMENT - if config == NULL
+ * - SP_CONFIG_SUCCESS - in case of success
+ */
 SPLIT_CRITERIA spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG* msg);
 
+/**
+ * Given an index 'index' the function stores in imagePath the full path of the .feats file
+ * of the ith image.
+ *
+ * For example:
+ * Given that the value of:
+ *  spImagesDirectory = "./images/"
+ *  spImagesPrefix = "img"
+ *  spNumOfImages = 17
+ *  index = 10
+ *
+ * The functions stores "./images/img10.feats" to the address given by imagePath.
+ * Thus the address given by imagePath must contain enough space to
+ * store the resulting string.
+ *
+ * @param imagePath - an address to store the result in, it must contain enough space.
+ * @param config - the configuration structure
+ * @param index - the index of the image.
+ *
+ * @return
+ * - SP_CONFIG_INVALID_ARGUMENT - if imagePath == NULL or config == NULL
+ * - SP_CONFIG_INDEX_OUT_OF_RANGE - if index >= spNumOfImages
+ * - SP_CONFIG_SUCCESS - in case of success
+ */
 SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, const SPConfig config, int index);
 
 char *trimWhitespace(char *str);
