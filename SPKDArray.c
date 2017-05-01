@@ -1,11 +1,6 @@
 #include "SPKDArray.h"
 #include <malloc.h>
 
-////Decelerations:
-//#define allocation_error()
-//typedef enum SP_WHAT_TO_WHAT_TO_FREE_t {
-//	SP_KDARRAY_MAT, SP_COPY_ARR, SP_LEFT_NODE, SP_RIGHT_NODE,
-//}SP_WHAT_TO_WHAT_TO_FREE;
 
 struct sp_kdArray_t {
 	SPPoint** copy_arr;

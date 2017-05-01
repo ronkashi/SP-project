@@ -29,7 +29,7 @@ SPKDArray* Init(SPPoint** arr, int size);
  */
 bool Split(SPKDArray* kdArr, int coor,SPKDArray* kdLeft, SPKDArray* kdRight);
 
-
+//destroy func for kd array
 void spKdArrayDestroy(SPKDArray* kd_array);
 
 /*
