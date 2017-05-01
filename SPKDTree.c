@@ -10,7 +10,7 @@ int getCoorToSplitBy(SPKDArray* arr, SPLIT_CRITERIA op, int level) {
 		return rand() % getKdArrayDim(arr);
 		break;
 	case INCREMENTAL:
-		return level;
+		return level %  getKdArrayDim(arr);
 		break;
 	default:
 		return -1;
@@ -98,7 +98,6 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 	if (false == Split(arr, root->Dim, kdLeft, kdRight)) {
 		return -1;
 	}
-	level++;
 	root->Left = (kdTreeNode*) malloc(sizeof(kdTreeNode));
 	if (NULL == root->Left) {
 		spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
@@ -115,6 +114,7 @@ int spKdTreeInit(SPKDArray* arr, kdTreeNode* root, SPLIT_CRITERIA op, int level)
 		spKdArrayDestroy(kdLeft);
 		return -1;
 	}
+	level++;
 	spKdTreeInit(kdLeft, root->Left, op, level);
 	spKdArrayDestroy(kdLeft);
 	spKdTreeInit(kdRight, root->Right, op, level);
