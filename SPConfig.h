@@ -287,16 +287,48 @@ SPLIT_CRITERIA spConfigGetKDTreeSplitMethod(const SPConfig config, SP_CONFIG_MSG
  */
 SP_CONFIG_MSG spConfigGetFeatsPath(char* imagePath, const SPConfig config, int index);
 
+/**
+ * Receives a pointer to a string, trims white space by addding a null char after the last 
+ * non white space char and returning a pointer to the first non white space char
+ */
 char *trimWhitespace(char *str);
 
+/**
+ * Receives config and sets the values of all properties that have defaults to the default
+ * values. This is called immediately after initializing the config struct. 
+ */
 void setConfigDefaults(SPConfig config);
 
+/**
+ * Receives a property name and value. Checks if the property name exists and if the value
+ * meets the criterea for that property. If it passes the checks then the value is updated
+ * in the config. If it does not pass the check then the appropriate error is printed and
+ * the appropriate error message is returned.
+ * This is a auxiliry function that is called by spConfigCreate().
+ *
+ * @param config - the configuration structure
+ * @param variableName - a pointer to the string containing the property name
+ * @param value - a pointer to the string containing the property value
+ * @param filename - a pointer to the string containing the config filename
+ * @param line - the number of the line in the config file that contains this property-value pair
+ */
 SP_CONFIG_MSG updateConfig(const SPConfig config, char* variableName, char* value, const char* filename, int line);
 
+/**
+ * Receives a pointer to a string. Returns true if there is a space character between the pointer 
+ * and the terminating null character. Returns false otherwise.
+ */
 bool containsSpace(char *str);
 
+/**
+ * Receives a string, parses it and returns the number that was parsed.
+ */
 int getNumber(char *str);
 
+/**
+ * Auxillary function that prints the appropriate message if one of the mandatory properties are 
+ * not defined in the config file.
+ */
 void printMissingParameter(const char *filename, const char *parameter, int lines);
 
 #endif /* SPCONFIG_H_ */

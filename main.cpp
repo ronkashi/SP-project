@@ -12,14 +12,17 @@ int main(int argc, char* argv[]) {
     int allFeatures=0;
     sp::ImageProc* ip;
 
+    //Create config
     config = createConfig(argc, argv);
     if(!config) return -1;
 
+    //Initialize logger
     if(!initializeLogger(config)) {
         spConfigDestroy(config);
         return -1;
     }
 
+    //Initialize ImageProc inside a try catch block so we can safely exit if an Exception is thrown
     ip = (sp::ImageProc*) malloc(sizeof(*ip));
     if(!ip) {
         spLoggerPrintError(ALLOC_ERROR_MSG, __FILE__, __func__, __LINE__);
@@ -34,7 +37,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-
+    //Get all features from images or .feats files (depending on config)
     flatDatabase = processFeatures(config, &allFeatures, *ip);
     if(!flatDatabase) {
         spConfigDestroy(config);
@@ -42,7 +45,7 @@ int main(int argc, char* argv[]) {
 		return -1;
     }
 
-    //initialize data structures
+    //Initialize KD Tree data structure
     kdTree = initDataStructs(flatDatabase, allFeatures, config);
     if(!kdTree) {
         spConfigDestroy(config);
@@ -50,8 +53,10 @@ int main(int argc, char* argv[]) {
 		return -1;
     }
 
+    //Enter Query-Search-Result loop
     searchByImage(config, kdTree, *ip);
 
+    //Free all remaining resources
     spKdTreeDestroy(kdTree);
     free(ip);
     spConfigDestroy(config);

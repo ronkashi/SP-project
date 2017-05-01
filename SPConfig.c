@@ -370,28 +370,3 @@ int getNumber(char *str) {
 void printMissingParameter(const char *filename, const char *parameter, int lines) {
     printf("File: %s\nLine: %d\nMessage: Parameter %s is not set\n", filename, lines, parameter);
 }
-
-// int main() {
-//     SP_CONFIG_MSG msg;
-//     char str[MAX_LENGTH];
-//     SPConfig config = spConfigCreate("spcbir.config", &msg);
-//     if(config == NULL) {
-//         printf("Create returned NULL with message: %d\n", msg);
-//     }
-//     printf("Extraction mode: %s\n", spConfigIsExtractionMode(config, &msg) ? "true" : "false");
-//     printf("Minimal GUI: %s\n", spConfigMinimalGui(config, &msg) ? "true" : "false");
-//     printf("Number of images: %d\n", spConfigGetNumOfImages(config, &msg));
-//     printf("Number of Features: %d\n", spConfigGetNumOfFeatures(config, &msg));
-//     printf("PCA Dimension: %d\n", spConfigGetPCADim(config, &msg));
-//     spConfigGetImagePath(str, config, 3);
-//     printf("Full image path: %s\n", str);
-//     spConfigGetPCAPath(str, config);
-//     printf("Full PCA path: %s\n", str);
-//     printf("Similar images: %d\n", spConfigGetNumOfSimilarImgs(config, &msg));
-//     printf("KNN: %d\n", spConfigGetKNN(config, &msg));
-//     printf("Logger level: %d\n", spConfigGetLoggerLevel(config, &msg));
-//     spConfigGetLoggerFilename(str, config);
-//     printf("Logger filename: %s\n", str);
-//     printf("Split method: %s\n", spConfigGetKDTreeSplitMethod(config, &msg) == 0 ? "RANDOM" : spConfigGetKDTreeSplitMethod(config, &msg) ? "MAX_SPREAD" : "INCREMENTAL");
-//     return 0;
-// }
