@@ -28,7 +28,7 @@ static bool basicInitConfigTest() {
 
 //test all default values
 static bool configDefaultValuesTest() {
-	const char* configFile = "default.config";
+	const char* configFile = "testDefault.config";
     char path[MAX_LENGTH];
     SP_CONFIG_MSG msg;
     SPConfig config = spConfigCreate(configFile, &msg);
