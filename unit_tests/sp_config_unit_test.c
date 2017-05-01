@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "unit_test_util.h" //SUPPORTING MACROS ASSERT_TRUE/ASSERT_FALSE etc..
+#include "unit_test_util.h"
 #include "../SPConfig.h"
 #define MAX_LENGTH 1024
 
@@ -48,11 +48,33 @@ static bool configDefaultValuesTest() {
 	return true;
 }
 
+//test that values are initialized according to test config file
+static bool configValuesTest() {
+	const char* configFile = "test.config";
+    char path[MAX_LENGTH];
+    SP_CONFIG_MSG msg;
+    SPConfig config = spConfigCreate(configFile, &msg);
+	ASSERT_TRUE(spConfigGetPCADim(config, &msg) == 20);
+    msg = spConfigGetPCAPath(path, config);
+	ASSERT_TRUE(strncmp(path, "abcd.efg", MAX_LENGTH));
+    ASSERT_TRUE(spConfigGetNumOfFeatures(config, &msg) == 88);
+    ASSERT_FALSE(spConfigIsExtractionMode(config, &msg));
+    ASSERT_FALSE(spConfigMinimalGui(config, &msg));
+    ASSERT_TRUE(spConfigGetNumOfSimilarImgs(config, &msg) == 5);
+    ASSERT_TRUE(spConfigGetKNN(config, &msg) == 7);
+    ASSERT_TRUE(spConfigGetKDTreeSplitMethod(config, &msg) == MAX_SPREAD);
+    ASSERT_TRUE(spConfigGetLoggerLevel(config, &msg) == 2);
+    msg = spConfigGetLoggerFilename(path, config);
+	ASSERT_TRUE(strncmp(path, "logger.com", MAX_LENGTH) == 0);
+	spConfigDestroy(config);
+	return true;
+}
+
 int main() {
 	RUN_TEST(basicConfigTest);
 	RUN_TEST(basicInitConfigTest);
     RUN_TEST(configDefaultValuesTest);
-	//RUN_TEST(configValuesTest);
+	RUN_TEST(configValuesTest);
 	printf("Completed!\n");
 	return 0;
 }
